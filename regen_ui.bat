@@ -1,0 +1,1 @@
+pyside6-uic Control.ui -o my.py
