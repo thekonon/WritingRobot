@@ -36,7 +36,7 @@ class CANCommunicationHandler:
         types = {"MotorDataFrame": self.motor_data_frame.get_msg()}
         msg = types.get(selected_type)
         if msg:
-            self.bus.send(types)
+            self.bus.send(msg)
         else:
             raise ValueError('Uknown type message selected')
         
