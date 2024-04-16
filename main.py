@@ -3,6 +3,7 @@ import time
 from PySide6.QtWidgets import QApplication, QMainWindow
 from my import Ui_MainWindow  # Import the generated UI class
 from _tools import CANCommunicationHandler
+from _calculations import Calculations
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -20,25 +21,37 @@ class MainWindow(QMainWindow):
         # Connect signals and slots
         self.ui.connectButton.clicked.connect(self.connect_function)
         self.ui.pushButton.clicked.connect(self.clear_log)
-        self.ui.dialButton.valueChanged.connect(self.button_moved)
+        self.ui.dialButton.valueChanged.connect(self.dial_1_moved)
+        self.ui.dialButton_2.valueChanged.connect(self.dial_2_moved)
         
         self._time_since_last_update = time.time()
         
         self._min_value = self.ui.dialButton.minimum()
         self._max_value = self.ui.dialButton.maximum()
-        self._remapped_min = -360
-        self._remapped_max = 360
+        self._remapped_min = -720
+        self._remapped_max =  720
 
-    def button_moved(self, value):
+    def dial_1_moved(self, value):
         if (time.time()-self._time_since_last_update)<self.update_time_threshold:
             return 0
         self._time_since_last_update = time.time()
+
+        data = Calculations.map_to_data(value)
         
-        mapped_val = self._map_value(value)
-        data = self._value_to_hex(mapped_val)
-        self.communication_handler.motor_data_frame.set_data(data)
-        self.communication_handler.send_data('MotorDataFrame')
-        self.add_to_log(str(value))
+        self.communication_handler.motor_data_frame.set_data(data, motor=0)
+        # self.communication_handler.send_data('MotorDataFrame')
+        self.add_to_log(str(Calculations.map_value(value)))
+        
+    def dial_2_moved(self, value):
+        if (time.time()-self._time_since_last_update)<self.update_time_threshold:
+            return 0
+        self._time_since_last_update = time.time()
+
+        data = Calculations.map_to_data(value)
+        
+        self.communication_handler.motor_data_frame.set_data(data, motor=1)
+        # self.communication_handler.send_data('MotorDataFrame')
+        self.add_to_log(str(Calculations.map_value(value)))
         
     
     def connect_function(self):

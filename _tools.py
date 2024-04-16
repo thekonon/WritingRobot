@@ -57,9 +57,9 @@ class CANCommunicationHandler:
         
         
 class MotorDataFrame:
-    def __init__(self) -> None:
+    def __init__(self, total_motors: int = 1) -> None:
         # Motors to be controlled
-        self.total_motors: int = 1
+        self.total_motors: int = total_motors
         
         # MSG id for motor(s) control
         self.MSG_ID: int = 0
@@ -73,8 +73,11 @@ class MotorDataFrame:
         # Init msg object
         self._create_msg()
     
-    def set_data(self, data: List[int]):
-        self.data = data
+    def set_data(self, data: List[int], motor: int = 0):
+        if motor:
+            self.data[:4] = data
+        else:
+            self.data[4:] = data
         self._create_msg()
     
     def get_msg(self) -> can.Message:
