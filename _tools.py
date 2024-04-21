@@ -3,57 +3,36 @@ import os
 from typing import List
 from enum import Enum
 
-class BitRates(Enum):
-    _125KHZ: int = 125000
-    
-
 class CANCommunicationHandler:
-    """# CANCOmmunicationHandler
-        1) Create this object
-        2) Modify data
-            a) obj.motor_data_frame.set_data(data)
-        3) Send data via CAN BUS
-    """
-    def __init__(self) -> None:
-        
-        self.bus: can.bus
-        
-        # Communicatino settings
-        self._BITRATE: int          = BitRates['_125KHZ']
-        self._CAN_INTERFACE: str    = 'can0'
-        self._BUS_TYPE: str         = 'socketcan'
-        
-        # MotorDataFrame settings
+    """CAN communication handler for motor control."""
+    def __init__(self, bitrate: int = 125000, interface: str = 'can0', bustype: str = 'socketcan'):
+        self.bus = can.Bus()
+        self.bitrate = bitrate
+        self.interface = interface
+        self.bustype = bustype
         self.motor_data_frame = MotorDataFrame()
-        
-        # State variables
-        self._init_done = 0
-        
-    def send_data(self, selected_type: str):
-        """Send all frames via can"""
-        if not self._init_done:
+        self.communication_initialized = False
+
+    def send_data(self, frame_type: str):
+        if not self.communication_initialized:
             raise ValueError("Initialization needs to be done")
-        types = {"MotorDataFrame": self.motor_data_frame.get_msg()}
-        msg = types.get(selected_type)
-        if msg:
-            self.bus.send(msg)
+        frames = {"MotorDataFrame": self.motor_data_frame.get_msg()}
+        frame = frames.get(frame_type)
+        if frame:
+            self.bus.send(frame)
         else:
-            raise ValueError('Uknown type message selected')
-        
-    def init_communication(self):
+            raise ValueError('Unknown frame type selected')
+
+    def initialize_communication(self):
         if os.name == 'nt':
             raise NotImplementedError('Implementation for Windows not implemented')
-        os.system("sudo ip link set can0 up type can bitrate 125000")
-        #os.system("sudo ip link set can0 up")
-        self.bus = can.interface.Bus(\
-            channel=self._CAN_INTERFACE, 
-            bustype=self._BUS_TYPE
-        )
-        self._init_done = 1
-    
-    def end_communication(self):
+        os.system(f"sudo ip link set {self.interface} up type can bitrate {self.bitrate}")
+        self.bus = can.interface.Bus(channel=self.interface, bustype=self.bustype)
+        self.communication_initialized = True
+
+    def finalize_communication(self):
         self.bus.shutdown()
-        os.system("sudo ip link set can0 down")
+        os.system(f"sudo ip link set {self.interface} down")
         
         
 class MotorDataFrame:
