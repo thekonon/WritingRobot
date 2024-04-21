@@ -12,14 +12,4 @@ Robot is made of:
 
 ### Photos
 
-![Main project diagram](/assets/images/tux.png)
-## Usage/Examples  
-~~~javascript  
-  import Component from 'my-project'
-
-  console.log("Hello World")
-~~~  
-
-~~~bash  
-  git clone https://link-to-project
-~~~
+TBD
