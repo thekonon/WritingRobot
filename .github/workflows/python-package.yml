@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies and set up environment
         run: |
           sudo apt-get update
-          sudo apt-get install ffmpeg libsm6 libxext6 -y
+          sudo apt-get install freeglut3-dev
           python -m pip install --upgrade pip
           python -m pip install flake8 pytest
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
