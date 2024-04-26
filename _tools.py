@@ -4,22 +4,18 @@ from typing import List
 from enum import Enum
 
 
-<<<<<<<<<<<<<<  ✨ Codeium Command 🌟 >>>>>>>>>>>>>>>>
-+
-+
-+class BitRates(Enum):
-+    """Enum class to store CAN bus bit rates.
-+
-+    Attributes:
-+        _125KHZ (int): CAN bus bit rate of 125000 bits per second.
-+    """
-+
-+    #: CAN bus bit rate of 125000 bits per second.
-+    _125KHZ: int = 125000
-+    """The value of the CAN bus bit rate of 125000 bits per second."""
--class BitRates(Enum):
--    _125KHZ: int = 125000
-<<<<<<<  53404d1e-2d8d-49c4-acc3-c4770e0bb4c8  >>>>>>>
+
+
+class BitRates(Enum):
+    """Enum class to store CAN bus bit rates.
+
+    Attributes:
+        _125KHZ (int): CAN bus bit rate of 125000 bits per second.
+    """
+
+    #: CAN bus bit rate of 125000 bits per second.
+    _125KHZ: int = 125000
+    """The value of the CAN bus bit rate of 125000 bits per second."""
 
 class CANCommunicationHandler:
     """# CANCOmmunicationHandler

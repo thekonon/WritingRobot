@@ -1,1 +1,2 @@
-pyside6-uic Control.ui -o my.py
+pyside6-uic C:\VSCode_2\PsaciRobot\Control.ui -o C:\VSCode_2\PsaciRobot\my.py
+pause
