@@ -12,4 +12,4 @@ Robot is made of:
 
 ### Photos
 
-TBD
+![Schematics](Arduino.png)
