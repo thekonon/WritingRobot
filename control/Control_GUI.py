@@ -3,7 +3,7 @@ import time
 from PySide6.QtWidgets import QApplication, QMainWindow
 from .my import Ui_MainWindow  # Import the generated UI class
 from ._tools import CANCommunicationHandler
-from ._calculations import Calculations
+from ._helpers import Calculations
 
 
 class MainWindow(QMainWindow):
