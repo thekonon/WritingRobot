@@ -10,6 +10,34 @@ Robot is made of:
 - __Arduino__ Nano clone
 - Two __stepper motors drivers__
 
-### Photos
+# Schemes
 
-![Schematics](Arduino.png)
+## Electrical wiring
+
+Arduino:
+
+![Arduino](Docu/Img/Electrical/Arduino.png)
+
+Stepper motors
+
+![Stepper1](Docu/Img/Electrical/Stepper_1.png)
+![Stepper2](Docu/Img/Electrical/Stepper_2.png)
+
+Connection to CAN MCP2515 module
+
+![MCP2515](Docu/Img/Electrical/MCP2515.png)
+
+Powerline
+
+![POWERLINE](Docu/Img/Electrical/Power.png)
+
+## Board design
+
+Wiring scheme of actual PCB
+
+![BoardScheme](Docu/Img/Board/Board_scheme.png)
+
+3D view to the board without and with modules
+
+![BoardWithoutComponents](Docu/Img/Board/Board_3d_without_components.png)
+![BoardWithComponents](Docu/Img/Board/Board_3d_with_components.png)

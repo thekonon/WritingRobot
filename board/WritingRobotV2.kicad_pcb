@@ -45,15 +45,15 @@
 			(layerselection 0x00010fc_ffffffff)
 			(plot_on_all_layers_selection 0x0000000_00000000)
 			(disableapertmacros no)
-			(usegerberextensions no)
-			(usegerberattributes yes)
-			(usegerberadvancedattributes yes)
-			(creategerberjobfile yes)
+			(usegerberextensions yes)
+			(usegerberattributes no)
+			(usegerberadvancedattributes no)
+			(creategerberjobfile no)
 			(dashed_line_dash_ratio 12.000000)
 			(dashed_line_gap_ratio 3.000000)
 			(svgprecision 4)
 			(plotframeref no)
-			(viasonmask no)
+			(viasonmask yes)
 			(mode 1)
 			(useauxorigin no)
 			(hpglpennumber 1)
@@ -67,16 +67,16 @@
 			(psnegative no)
 			(psa4output no)
 			(plotreference yes)
-			(plotvalue yes)
+			(plotvalue no)
 			(plotfptext yes)
 			(plotinvisibletext no)
 			(sketchpadsonfab no)
-			(subtractmaskfromsilk no)
+			(subtractmaskfromsilk yes)
 			(outputformat 1)
 			(mirror no)
-			(drillshape 1)
+			(drillshape 0)
 			(scaleselection 1)
-			(outputdirectory "")
+			(outputdirectory "./fab")
 		)
 	)
 	(net 0 "")
@@ -136,7 +136,7 @@
 		(descr "Through hole straight pin header, 1x04, 2.54mm pitch, single row")
 		(tags "Through hole pin header THT 1x04 2.54mm single row")
 		(property "Reference" "J2"
-			(at 0 -2.33 180)
+			(at 0 -3 180)
 			(layer "F.SilkS")
 			(uuid "f19da96b-1c64-44c8-83bb-e95c0b89289a")
 			(effects
@@ -147,8 +147,9 @@
 			)
 		)
 		(property "Value" "Conn_01x04_Pin"
-			(at 0 9.95 180)
+			(at 8.5 6 180)
 			(layer "F.Fab")
+			(hide yes)
 			(uuid "155e99f6-7bb1-4389-a703-27974f4f2ffe")
 			(effects
 				(font
@@ -349,7 +350,7 @@
 			(uuid "03ef33ca-73a5-4470-ab11-35446fe606fe")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 3.81 270)
+			(at 0 3.81 -90)
 			(layer "F.Fab")
 			(uuid "7b5cd8f9-d0e2-4ee8-854c-58008838dbbe")
 			(effects
@@ -422,7 +423,7 @@
 		(descr "Through hole straight socket strip, 1x06, 2.54mm pitch, single row (from Kicad 4.0.7), script generated")
 		(tags "Through hole socket strip THT 1x06 2.54mm single row")
 		(property "Reference" "J4"
-			(at 0 -2.77 360)
+			(at 0 -2.77 0)
 			(layer "F.SilkS")
 			(uuid "841a44bd-3026-4df5-a46b-1cb4a7db3742")
 			(effects
@@ -433,8 +434,9 @@
 			)
 		)
 		(property "Value" "Conn_01x06_Socket"
-			(at 0 15.47 360)
+			(at 10.5 7 180)
 			(layer "F.Fab")
+			(hide yes)
 			(uuid "72d00051-e081-4920-a763-add5f24f7830")
 			(effects
 				(font
@@ -1180,6 +1182,29 @@
 				(xyz 0 0 0)
 			)
 		)
+		(model "${KIPRJMOD}/extra_models/a4988-stepper-motor-driver-carrier.step"
+			(hide yes)
+			(offset
+				(xyz -1.25 -19.05 0)
+			)
+			(scale
+				(xyz 1 1 1)
+			)
+			(rotate
+				(xyz 0 0 0)
+			)
+		)
+		(model "${KIPRJMOD}/extra_models/A4988 STEPPER MOTOR DRIVER CARRIER--3DModel-STEP-56544.STEP"
+			(offset
+				(xyz 6.2 -8.9 0)
+			)
+			(scale
+				(xyz 1 1 1)
+			)
+			(rotate
+				(xyz -90 0 0)
+			)
+		)
 	)
 	(footprint "Connector_PinSocket_2.54mm:PinSocket_1x02_P2.54mm_Vertical"
 		(layer "F.Cu")
@@ -1188,7 +1213,7 @@
 		(descr "Through hole straight socket strip, 1x02, 2.54mm pitch, single row (from Kicad 4.0.7), script generated")
 		(tags "Through hole socket strip THT 1x02 2.54mm single row")
 		(property "Reference" "J1"
-			(at 0 -2.77 270)
+			(at 0 -2.77 0)
 			(layer "F.SilkS")
 			(uuid "2970c2d5-e9a6-4040-b326-79cf5606dabd")
 			(effects
@@ -1199,8 +1224,9 @@
 			)
 		)
 		(property "Value" "Conn_01x02_Socket"
-			(at 0 5.31 270)
+			(at 3.5 2 0)
 			(layer "F.Fab")
+			(hide yes)
 			(uuid "c8f42d19-484a-484f-92ee-b6217c7b0dd9")
 			(effects
 				(font
@@ -1401,7 +1427,7 @@
 			(uuid "2388a9d7-783f-4f6e-a5ad-4cad5259193b")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 1.27 360)
+			(at 0 1.27 0)
 			(layer "F.Fab")
 			(uuid "69866af5-1cea-406f-8bc9-0bcb7fadc1ac")
 			(effects
@@ -1452,7 +1478,7 @@
 		(descr "Through hole straight pin header, 1x04, 2.54mm pitch, single row")
 		(tags "Through hole pin header THT 1x04 2.54mm single row")
 		(property "Reference" "J3"
-			(at 0 -2.33 180)
+			(at 0 -2.96 180)
 			(layer "F.SilkS")
 			(uuid "8ac909ad-ef8c-4986-a2a6-d6b3e4dd22c1")
 			(effects
@@ -1665,17 +1691,6 @@
 			(layer "F.Fab")
 			(uuid "7afdb18b-7386-4332-ae54-13d9df7f38ef")
 		)
-		(fp_text user "${REFERENCE}"
-			(at 0 3.81 270)
-			(layer "F.Fab")
-			(uuid "a6ee41c4-09aa-464e-9e1f-3c4674b983f8")
-			(effects
-				(font
-					(size 1 1)
-					(thickness 0.15)
-				)
-			)
-		)
 		(pad "1" thru_hole rect
 			(at 0 0 180)
 			(size 1.7 1.7)
@@ -1750,7 +1765,7 @@
 			)
 		)
 		(property "Value" "Arduino_Nano_Every"
-			(at 24.24 18 90)
+			(at 8.24 18.5 -90)
 			(layer "F.Fab")
 			(uuid "c0438c79-0fa7-4f54-b6fc-d0ed776b5310")
 			(effects
@@ -2475,6 +2490,17 @@
 				(xyz 0 0 0)
 			)
 		)
+		(model "${KIPRJMOD}/extra_models/Arduino Nano.STEP"
+			(offset
+				(xyz 7.7 -17.9 0)
+			)
+			(scale
+				(xyz 1 1 1)
+			)
+			(rotate
+				(xyz -90 0 180)
+			)
+		)
 	)
 	(footprint "Module:Pololu_Breakout-16_15.2x20.3mm"
 		(layer "F.Cu")
@@ -2931,6 +2957,29 @@
 			)
 			(rotate
 				(xyz 0 0 0)
+			)
+		)
+		(model "${KIPRJMOD}/extra_models/a4988-stepper-motor-driver-carrier.step"
+			(hide yes)
+			(offset
+				(xyz -1.25 -19.05 0)
+			)
+			(scale
+				(xyz 1 1 1)
+			)
+			(rotate
+				(xyz 0 0 0)
+			)
+		)
+		(model "${KIPRJMOD}/extra_models/A4988 STEPPER MOTOR DRIVER CARRIER--3DModel-STEP-56544.STEP"
+			(offset
+				(xyz 6.2 -8.9 0)
+			)
+			(scale
+				(xyz 1 1 1)
+			)
+			(rotate
+				(xyz -90 0 0)
 			)
 		)
 	)
