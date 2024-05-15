@@ -26,4 +26,22 @@ def test_value_to_hex():
     assert _helpers.Calculations.value_to_hex(347.36) == [0, 1, 91, 36]
     assert _helpers.Calculations.value_to_hex(-347.36) == [1, 1, 91, 36]
     assert _helpers.Calculations.value_to_hex(0) == [0,0,0,0]
+
+def test_value_to_hex_2():
+    # Normal cases
+    assert _helpers.Calculations.value_to_hex_2(312.1234564) == [1, 56, 4, 210]
+    assert _helpers.Calculations.value_to_hex_2(0) == [0, 0, 0, 0]
+    assert _helpers.Calculations.value_to_hex_2(360) == [0, 0, 0, 0]
+    assert _helpers.Calculations.value_to_hex_2(720) == [0, 0, 0, 0]
+    assert _helpers.Calculations.value_to_hex_2(180) == [0, 180, 0, 0]
     
+    # Edge cases
+    assert _helpers.Calculations.value_to_hex_2(359.9999) == [1, 103, 39, 15]
+    assert _helpers.Calculations.value_to_hex_2(360.0001) == [0, 0, 0, 1]
+    assert _helpers.Calculations.value_to_hex_2(720.0001) == [0, 0, 0, 1]
+
+    # Negative input
+    assert _helpers.Calculations.value_to_hex_2(-90) == [1, 14, 0, 0]
+
+    # Large input
+    assert _helpers.Calculations.value_to_hex_2(1000000) == [1, 24, 0, 0]
