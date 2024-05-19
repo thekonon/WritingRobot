@@ -3,7 +3,7 @@ from PySide6.QtWidgets import QGraphicsScene, QGraphicsLineItem, QGraphicsView, 
 from PySide6.QtGui import QPainter, QColor, QPen
 from PySide6.QtCore import Qt, QPointF, Slot, QRectF
 from math import cos, sin, pi
-from typing import List
+from typing import List, Callable
 
 class GridGraphicsView(QGraphicsView):
     def __init__(self, scene) -> None:
@@ -14,7 +14,7 @@ class GridGraphicsView(QGraphicsView):
         self.zoom_factor: float = 1.25  # Zoom factor for each zoom step
         self.setRenderHint(QPainter.Antialiasing)
     
-    def wheelEvent(self, event):
+    def wheelEvent(self, event) -> None:
         # Zoom in or out depending on the direction of the wheel event
         if event.angleDelta().y() > 0:
             self.scale(self.zoom_factor, self.zoom_factor)
@@ -31,10 +31,10 @@ class GridGraphicsView(QGraphicsView):
         grid_size: int = 20
         
         # Get the bounds of the scene
-        left = int(rect.left())
-        right = int(rect.right())
-        top = int(rect.top())
-        bottom = int(rect.bottom())
+        left: int =     int(rect.left())
+        right: int =    int(rect.right())
+        top: int =      int(rect.top())
+        bottom: int =   int(rect.bottom())
         
         # Draw vertical grid lines
         for x in range(left - (left % grid_size), right, grid_size):
@@ -54,16 +54,17 @@ class MyGraphicsScene(QGraphicsScene):
         self.on_right_hold: bool = False
         self.last_pos: QPointF = QPointF()
 
-    def set_drawer(self, drawer) -> None:
-        self.drawer: Drawer = drawer
+    def set_updater(self, updater: Callable) -> None:
+        self.updater: Callable = updater
     
-    def mousePressEvent(self, event):
+    def mousePressEvent(self, event) -> None:
         if event.button() == Qt.LeftButton:
             # Left mouse button clicked
             self.on_left_hold = True
             self.last_pos = event.scenePos()
             self.update_robot_position(event.scenePos())
-            self.drawer.draw()
+            self.updater()
+            
         elif event.button() == Qt.RightButton:
             # Right mouse button clicked
             self.on_right_hold = True
@@ -80,10 +81,10 @@ class MyGraphicsScene(QGraphicsScene):
     def mouseMoveEvent(self, event) -> None:
         if self.on_left_hold:
             self.update_robot_position(event.scenePos())
-            self.drawer.draw()
+            self.updater()
             self.last_pos = event.scenePos()
         elif self.on_right_hold:
-            delta = event.scenePos() - self.last_pos
+            delta: QPointF = event.scenePos() - self.last_pos
             self.last_pos = event.scenePos()
             self.setSceneRect(self.sceneRect().translated(-delta.x(), -delta.y()))
         super().mouseMoveEvent(event)

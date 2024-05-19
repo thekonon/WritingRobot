@@ -1,6 +1,6 @@
 import sys
-from PySide6.QtWidgets import QApplication, QMainWindow, QGraphicsView, QGraphicsScene, QGraphicsLineItem, QPushButton, QDial, QGridLayout, QWidget
-from PySide6.QtCore import Qt, QPointF, Slot, QTimer
+from PySide6.QtWidgets import QApplication, QMainWindow, QGraphicsScene, QPushButton, QDial, QGridLayout, QWidget
+from PySide6.QtCore import Qt, Slot, Signal
 from .mechanics import Robot
 from .drawer import GridGraphicsView, Drawer, MyGraphicsScene
 from math import cos, sin, pi
@@ -27,23 +27,23 @@ class MainWindow(QMainWindow):
         self.disconnect_button.clicked.connect(self.disconnect)
 
         # Create dial for controlling motor1
-        self.motor1_dial: QDial = QDial()
+        self.motor1_dial: QDial = MotorDial()
         self.motor1_dial.setMinimum(0)
         self.motor1_dial.setMaximum(360)  # Set maximum value to 360 degrees
         self.motor1_dial.setWrapping(True)  # Allow wrapping around when reaching minimum or maximum
         self.motor1_dial.setNotchesVisible(True)  # Show notches
         self.motor1_dial.setValue(int(self.robot.phi[0]/3.14*180))
         self.motor1_dial.setInvertedAppearance(True)  # Invert the dial appearance to start from the bottom
-        self.motor1_dial.valueChanged.connect(self.set_motor1_speed)
+        self.motor1_dial.dialValueWhileDragging.connect(self.set_motor1_speed)
 
-        self.motor2_dial: QDial = QDial()
+        self.motor2_dial: QDial = MotorDial()
         self.motor2_dial.setMinimum(0)
         self.motor2_dial.setMaximum(360)
         self.motor2_dial.setValue(int(self.robot.phi[1]/3.14*360))
         self.motor2_dial.setWrapping(True)  # Allow wrapping around when reaching minimum or maximum
         self.motor2_dial.setNotchesVisible(True)  # Show notches
         self.motor2_dial.setInvertedAppearance(True)  # Invert the dial appearance to start from the bottom
-        self.motor2_dial.valueChanged.connect(self.set_motor2_speed)
+        self.motor2_dial.dialValueWhileDragging.connect(self.set_motor2_speed)
 
         # Create grid layout
         self.grid_layout: QGridLayout = QGridLayout()
@@ -65,18 +65,13 @@ class MainWindow(QMainWindow):
         self.drawer: Drawer     = Drawer(self.robot, self.canvas_scene)
         self.drawer.draw()
         
-        self.canvas_scene.set_drawer(self.drawer)
-        
-        # self.timer = QTimer(self)
-        # self.timer.timeout.connect(self.update_gui)
-        # self.timer.start(500)  # Update every 0.5 seconds
+        self.canvas_scene.set_updater(self.update_gui)
         
 
     def update_gui(self) -> None:
-        current_r_m: List[float] = self.robot.r_m
-        current_r_m[0] -= 2
-        self.robot.r_m = current_r_m 
         self.drawer.draw()
+        self.motor1_dial.setValue(int(self.robot.phi[0]/3.14*180))
+        self.motor2_dial.setValue(int(self.robot.phi[1]/3.14*360))
             
             
             
@@ -100,6 +95,28 @@ class MainWindow(QMainWindow):
         print("Motor 2 speed set to:", value)
         self.robot.set_phi_2(value/180*3.14)
         self.drawer.draw()
+        
+class MotorDial(QDial):
+    dialValueWhileDragging: Signal = Signal(int)
+
+    def __init__(self, parent=None) -> None:
+        super().__init__(parent)
+        self.is_mouse_pressed: bool = False
+
+    def mousePressEvent(self, event) -> None:
+        self.is_mouse_pressed = True
+        self.dialValueWhileDragging.emit(self.value())
+        super().mousePressEvent(event)
+
+    def mouseReleaseEvent(self, event) -> None:
+        self.is_mouse_pressed = False
+        self.dialValueWhileDragging.emit(self.value())
+        super().mouseReleaseEvent(event)
+
+    def mouseMoveEvent(self, event) -> None:
+        if self.is_mouse_pressed and event.buttons() & Qt.LeftButton:
+            self.dialValueWhileDragging.emit(self.value())
+        super().mouseMoveEvent(event)
         
 if __name__ == "__main__":
     app: QApplication = QApplication(sys.argv)
