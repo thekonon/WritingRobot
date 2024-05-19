@@ -1,117 +1,108 @@
 import sys
-import time
-from PySide6.QtWidgets import QApplication, QMainWindow
-from .control_ui import Ui_MainWindow  # Import the generated UI class
-from .control._tools import CANCommunicationHandler
-from .control._helpers import Calculations
-
+from PySide6.QtWidgets import QApplication, QMainWindow, QGraphicsView, QGraphicsScene, QGraphicsLineItem, QPushButton, QDial, QGridLayout, QWidget
+from PySide6.QtCore import Qt, QPointF, Slot, QTimer
+from .mechanics import Robot
+from .drawer import GridGraphicsView, Drawer, MyGraphicsScene
+from math import cos, sin, pi
+from typing import List
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
+        self.robot: Robot       = Robot()
 
-        self.update_time_threshold = 0.1  # in s
+        # Set window title and size
+        self.setWindowTitle("RobotController")
+        self.setGeometry(100, 100, 600, 600)
 
-        # CAN Communication object
-        self.communication_handler = CANCommunicationHandler()
+        # Create QGraphicsView and QGraphicsScene for pentagram
+        self.canvas_scene: QGraphicsScene = MyGraphicsScene(self.robot)
+        self.canvas_view: GridGraphicsView = GridGraphicsView(self.canvas_scene)
+        self.canvas_view.setScene(self.canvas_scene)
 
-        # Set up the user interface from Designer.
-        self.ui = Ui_MainWindow()
-        self.ui.setupUi(self)
+        # Create connect and disconnect buttons
+        self.connect_button: QPushButton = QPushButton("Connect")
+        self.connect_button.clicked.connect(self.connect)
+        self.disconnect_button: QPushButton = QPushButton("Disconnect")
+        self.disconnect_button.clicked.connect(self.disconnect)
 
-        # Connect signals and slots
-        self.ui.connectButton.clicked.connect(self.connect_function)
-        self.ui.pushButton.clicked.connect(self.clear_log)
-        self.ui.dialButton.valueChanged.connect(self.dial_1_moved)
-        self.ui.dialButton_2.valueChanged.connect(self.dial_2_moved)
+        # Create dial for controlling motor1
+        self.motor1_dial: QDial = QDial()
+        self.motor1_dial.setMinimum(0)
+        self.motor1_dial.setMaximum(360)  # Set maximum value to 360 degrees
+        self.motor1_dial.setWrapping(True)  # Allow wrapping around when reaching minimum or maximum
+        self.motor1_dial.setNotchesVisible(True)  # Show notches
+        self.motor1_dial.setValue(int(self.robot.phi[0]/3.14*180))
+        self.motor1_dial.setInvertedAppearance(True)  # Invert the dial appearance to start from the bottom
+        self.motor1_dial.valueChanged.connect(self.set_motor1_speed)
 
-        self._time_since_last_update = time.time()
+        self.motor2_dial: QDial = QDial()
+        self.motor2_dial.setMinimum(0)
+        self.motor2_dial.setMaximum(360)
+        self.motor2_dial.setValue(int(self.robot.phi[1]/3.14*360))
+        self.motor2_dial.setWrapping(True)  # Allow wrapping around when reaching minimum or maximum
+        self.motor2_dial.setNotchesVisible(True)  # Show notches
+        self.motor2_dial.setInvertedAppearance(True)  # Invert the dial appearance to start from the bottom
+        self.motor2_dial.valueChanged.connect(self.set_motor2_speed)
 
-        self._min_value = self.ui.dialButton.minimum()
-        self._max_value = self.ui.dialButton.maximum()
-        self._remapped_min = -720
-        self._remapped_max = 720
+        # Create grid layout
+        self.grid_layout: QGridLayout = QGridLayout()
 
-    def dial_1_moved(self, value):
-        if (time.time() - self._time_since_last_update) < self.update_time_threshold:
-            return 0
-        self._time_since_last_update = time.time()
+        # Add pentagram graphics view to layout
+        self.grid_layout.addWidget(self.canvas_view, 0, 0, 1, 2)
 
-        data = Calculations.map_to_data(value)
+        # Add widgets to layout
+        self.grid_layout.addWidget(self.connect_button, 1, 0)
+        self.grid_layout.addWidget(self.disconnect_button, 1, 1)
+        self.grid_layout.addWidget(self.motor1_dial, 2, 0)
+        self.grid_layout.addWidget(self.motor2_dial, 2, 1)
 
-        self.communication_handler.motor_data_frame.set_data(data, motor=0)
-        # self.communication_handler.send_data('MotorDataFrame')
-        self.add_to_log(str(Calculations.map_value(value)))
+        # Create central widget and set layout
+        central_widget: QWidget = QWidget()
+        central_widget.setLayout(self.grid_layout)
+        self.setCentralWidget(central_widget)
+        
+        self.drawer: Drawer     = Drawer(self.robot, self.canvas_scene)
+        self.drawer.draw()
+        
+        self.canvas_scene.set_drawer(self.drawer)
+        
+        # self.timer = QTimer(self)
+        # self.timer.timeout.connect(self.update_gui)
+        # self.timer.start(500)  # Update every 0.5 seconds
+        
 
-    def dial_2_moved(self, value):
-        if (time.time() - self._time_since_last_update) < self.update_time_threshold:
-            return 0
-        self._time_since_last_update = time.time()
+    def update_gui(self) -> None:
+        current_r_m: List[float] = self.robot.r_m
+        current_r_m[0] -= 2
+        self.robot.r_m = current_r_m 
+        self.drawer.draw()
+            
+            
+            
+    @Slot()
+    def connect(self) -> None:
+        print("Connect button clicked")
 
-        data = Calculations.map_to_data(value)
+    @Slot()
+    def disconnect(self) -> None:
+        print("Disconnect button clicked")
 
-        self.communication_handler.motor_data_frame.set_data(data, motor=1)
-        # self.communication_handler.send_data('MotorDataFrame')
-        self.add_to_log(str(Calculations.map_value(value)))
+    @Slot(int)
+    def set_motor1_speed(self, value) -> None:
+        print("Motor 1 speed set to:", value)
+        self.robot.set_phi_1(value/180*3.14)
+        self.drawer.draw()
+        
 
-    def connect_function(self):
-        self.communication_handler.init_communication()
-        self.add_to_log("Connection established")
-
-    def disconnect_function(self):
-        self.communication_handler.end_communication()
-        self.add_to_log("Disconnected")
-
-    def clear_log(self):
-        self.ui.logWindow.clear()
-
-    def add_to_log(self, new_text: str):
-        old_text = self.ui.logWindow.toPlainText()
-        new_text_to_be_set = old_text + "\n" + new_text
-        if new_text_to_be_set.startswith("\n"):
-            new_text_to_be_set = new_text_to_be_set[1:]
-        self.ui.logWindow.setText(new_text_to_be_set)
-        self._scroll_to_bottom()
-
-    def _map_value(self, value):
-        total_size = self._max_value - self._min_value
-        procent = value / total_size
-        total_new = self._remapped_max - self._remapped_min
-        return self._remapped_min + procent * total_new
-
-    def _value_to_hex(self, value: int):
-        # 1st byte      - sign 0 - +
-        # 2nd/3rd byte  - value before decimal
-        # 4th byte      - after decimal value
-        # e.g. 347.36 -> [0, 1, 91, 36]
-        before_decimal = abs(int(value))
-        after_decimal = int(
-            abs(value) % 1 * 100
-        )  # Extracting the first two decimal digits
-        if before_decimal > 2**16:
-            raise ValueError("Too large number to be sent")
-        if after_decimal > 2**8:
-            raise ValueError("Too large number to be sent")
-        hex_sign = "00" if value >= 0 else "01"  # Padding sign to 2 characters
-
-        hex_before_decimal = format(before_decimal, "04x")  # Padding to 4 characters
-        hex_after_decimal = format(after_decimal, "02x")  # Padding to 2 characters
-
-        # Returning list of integers representing hex values
-        return [
-            int(hex_sign, 16),
-            int(hex_before_decimal[:2], 16),
-            int(hex_before_decimal[2:], 16),
-            int(hex_after_decimal, 16),
-        ]
-
-    def _scroll_to_bottom(self):
-        scrollbar = self.ui.logWindow.verticalScrollBar()
-        scrollbar.setValue(scrollbar.maximum())
-
-
+    @Slot(int)
+    def set_motor2_speed(self, value) -> None:
+        print("Motor 2 speed set to:", value)
+        self.robot.set_phi_2(value/180*3.14)
+        self.drawer.draw()
+        
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = MainWindow()
+    app: QApplication = QApplication(sys.argv)
+    window: MainWindow = MainWindow()
     window.show()
     sys.exit(app.exec())

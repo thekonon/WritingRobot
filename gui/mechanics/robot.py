@@ -41,6 +41,30 @@ class Robot:
         self._calculate_angles()
         return (self._phi[0], self._phi[1])
 
+    def set_phi_1(self, phi_1: float) -> None:
+        self.phi_1 = phi_1
+        A: tuple = (self.l1 * math.cos(self.phi_1), self.l1 * math.sin(self.phi_1))
+        B: tuple = (self.l5 + self.l2 * math.cos(self.phi_2), self.l2 * math.sin(self.phi_2))
+        AB: tuple = (B[0] - A[0], B[1] - A[1])
+        AB_2: float   = AB[0] ** 2 + AB[1] ** 2
+        alfa_0: float = math.atan2(AB[1], AB[0])
+        alfa_1: float = math.acos(AB_2/(2*self.l3*math.sqrt(AB_2)))
+        self.phi_3: float = alfa_0+alfa_1
+        self.phi_4: float = math.pi+alfa_0-alfa_1
+        
+    def set_phi_2(self, phi_2: float) -> None:
+        self.phi_2 = phi_2
+        A: tuple = (self.l1 * math.cos(self.phi_1), self.l1 * math.sin(self.phi_1))
+        B: tuple = (self.l5 + self.l2 * math.cos(self.phi_2), self.l2 * math.sin(self.phi_2))
+        AB: tuple = (B[0] - A[0], B[1] - A[1])
+        AB_2: float   = AB[0] ** 2 + AB[1] ** 2
+        alfa_0: float = math.atan2(AB[1], AB[0])
+        alfa_1: float = math.acos(AB_2/(2*self.l3*math.sqrt(AB_2)))
+        self.phi_3: float = alfa_0+alfa_1
+        self.phi_4: float = math.pi+alfa_0-alfa_1
+        
+        
+        
     def _load_settings(self) -> None:
         settings = None
         with open(self._settings_file_path, "r") as stream:
@@ -217,6 +241,20 @@ class Robot:
     @l5.setter
     def l5(self, value: float):
         self._lengths = (self.l1, self.l2, self.l3, self.l4, value)
+        
+    def __iadd__(self, values: List[float]):
+        if len(values) != len(self._r_m):
+            raise ValueError("Length of values must match length of r_m")
+        self._r_m = [a + b for a, b in zip(self._r_m, values)]
+        self._calculate_angles()
+        return self
+
+    def __isub__(self, values: List[float]):
+        if len(values) != len(self._r_m):
+            raise ValueError("Length of values must match length of r_m")
+        self._r_m = [a - b for a, b in zip(self._r_m, values)]
+        self._calculate_angles()
+        return self
 
 
 if __name__ == "__main__":
