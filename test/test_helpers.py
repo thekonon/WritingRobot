@@ -1,8 +1,6 @@
 import os
 import sys
-
-# Now you can import modules relative to the parent directory
-from control import _helpers
+from gui.control import _helpers
 
 def test_map_to_data():
     from_value_min = _helpers.Calculations._FROM_MIN_VALUE

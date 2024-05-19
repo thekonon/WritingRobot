@@ -1,7 +1,7 @@
 import os
 import sys
 
-from mechanics.robot import Robot
+from gui.mechanics.robot import Robot
 
 def test_property_assigments_r_m():
     robot = Robot(lengths=(100, 100, 100, 100, 50))
