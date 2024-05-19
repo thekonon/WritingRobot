@@ -15,13 +15,13 @@ class Robot:
 
         self._settings_file_path = self._get_settings_path()
         self._load_settings()
-        
+
         # Overwrite the settings file if needed
         if "lengths" in kwargs:
             self.lengths = kwargs["lengths"]
         if "initial_position" in kwargs:
             self.r_m = kwargs["initial_position"]
-        
+
         self._calculate_angles()
 
     def get_motor_angles(self, r_m: List[float]) -> Tuple[float, float]:
@@ -36,12 +36,11 @@ class Robot:
         """
         # Set the current end point
         self.r_m = r_m
-        
+
         # Recalculate the robot position
         self._calculate_angles()
         return (self._phi[0], self._phi[1])
 
-    
     def _load_settings(self) -> None:
         settings = None
         with open(self._settings_file_path, "r") as stream:
@@ -54,11 +53,12 @@ class Robot:
             lengths_dict = settings["lengths"]
             order = ["l1", "l2", "l3", "l4", "l5"]
             self.lengths = tuple([lengths_dict[key] for key in order])
-            
+
             # Load initial position
             initial_position_dict = settings["initial_position"]
-            self.r_m = [initial_position_dict["x_m"], initial_position_dict["y_m"]]
-            
+            self.r_m = [initial_position_dict["x_m"],
+                        initial_position_dict["y_m"]]
+
             print(f"Settings loaded successfully")
             print(f"Lengths: {self.lengths}")
             print(f"initial position: {self.r_m}")
@@ -97,7 +97,7 @@ class Robot:
         current_dir = os.path.dirname(__file__)
         settings_path = os.path.join(current_dir, 'settings.yaml')
         return settings_path
-    
+
     @property
     def r_m(self) -> List[float]:
         return self._r_m
