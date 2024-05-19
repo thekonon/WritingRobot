@@ -1,12 +1,11 @@
 import math
 import yaml
+import os
 from typing import List, Tuple
 
 
 class Robot:
     def __init__(self, *args, **kwargs) -> None:
-        self._settings_file_path = "mechanics/settings.yaml"
-
         # Init variables
         self._lengths: tuple = (0.0, 0.0, 0.0, 0.0, 0.0)
         self._phi: List[float] = [0.0, 0.0, 0.0, 0.0]
@@ -14,6 +13,7 @@ class Robot:
         # End_points of arms
         self._r_m: List[float] = [25, 150]
 
+        self._settings_file_path = self._get_settings_path()
         self._load_settings()
         
         # Overwrite the settings file if needed
@@ -93,6 +93,11 @@ class Robot:
         self.phi = [phi_1, phi_2, phi_3, phi_4]
         # [val/3.14*180 for val in self.phi]
 
+    def _get_settings_path(self):
+        current_dir = os.path.dirname(__file__)
+        settings_path = os.path.join(current_dir, 'settings.yaml')
+        return settings_path
+    
     @property
     def r_m(self) -> List[float]:
         return self._r_m

@@ -4,8 +4,6 @@ from typing import List
 from enum import Enum
 
 
-
-
 class BitRates(Enum):
     """Enum class to store CAN bus bit rates.
 
@@ -16,6 +14,7 @@ class BitRates(Enum):
     #: CAN bus bit rate of 125000 bits per second.
     _125KHZ: int = 125000
     """The value of the CAN bus bit rate of 125000 bits per second."""
+
 
 class CANCommunicationHandler:
     """# CANCOmmunicationHandler

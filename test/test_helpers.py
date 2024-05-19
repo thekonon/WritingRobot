@@ -1,6 +1,6 @@
 import os
 import sys
-from gui.control import _helpers
+import gui.control._helpers as _helpers
 
 def test_map_to_data():
     from_value_min = _helpers.Calculations._FROM_MIN_VALUE
