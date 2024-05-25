@@ -1,6 +1,6 @@
 import can
 import os
-from typing import List
+from typing import List, Any
 from enum import Enum
 
 
@@ -26,7 +26,7 @@ class CANCommunicationHandler:
 
     def __init__(self) -> None:
 
-        self.bus: can.Bus
+        self.bus: can.BusABC
 
         # Communicatino settings
         self._BITRATE: int = BitRates._125KHZ.value
@@ -34,12 +34,12 @@ class CANCommunicationHandler:
         self._BUS_TYPE: str = "socketcan"
 
         # MotorDataFrame settings
-        self.motor_data_frame = MotorDataFrame()
+        self.motor_data_frame: MotorDataFrame = MotorDataFrame()
 
         # State variables
-        self._init_done = 0
+        self._init_done: int = 0
 
-    def send_data(self, selected_type: str):
+    def send_data(self, selected_type: str) -> None:
         """Send all frames via can"""
         if not self._init_done:
             raise ValueError("Initialization needs to be done")
@@ -50,7 +50,7 @@ class CANCommunicationHandler:
         else:
             raise ValueError("Uknown type message selected")
 
-    def init_communication(self):
+    def init_communication(self) -> Any:
         if os.name == "nt":
             raise NotImplementedError("Implementation for Windows not implemented")
         os.system("sudo ip link set can0 up type can bitrate 125000")
@@ -60,7 +60,7 @@ class CANCommunicationHandler:
         )
         self._init_done = 1
 
-    def end_communication(self):
+    def end_communication(self) -> None:
         self.bus.shutdown()
         os.system("sudo ip link set can0 down")
 
@@ -82,7 +82,7 @@ class MotorDataFrame:
         # Init msg object
         self._create_msg()
 
-    def set_data(self, data: List[int], motor: int = 0):
+    def set_data(self, data: List[int], motor: int = 0) -> None:
         if motor:
             self.data[:4] = data
         else:
@@ -92,11 +92,11 @@ class MotorDataFrame:
     def get_msg(self) -> can.Message:
         return self._msg
 
-    def _create_msg(self):
-        self._msg = can.Message(
+    def _create_msg(self) -> None:
+        self._msg: can.Message = can.Message(
             arbitration_id=self.MSG_ID, is_extended_id=False, data=self.data
         )
 
 
 if __name__ == "__main__":
-    h = CANCommunicationHandler()
+    h: CANCommunicationHandler = CANCommunicationHandler()
