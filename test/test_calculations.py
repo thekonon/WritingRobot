@@ -1,6 +1,10 @@
 import os
 import sys
 
+current_dir = os.path.dirname(os.path.abspath(__file__))
+root_dir = os.path.abspath(os.path.join(current_dir, '..'))
+sys.path.append(root_dir)
+
 from gui.mechanics.robot import Robot
 
 def test_property_assigments_r_m():
