@@ -4,8 +4,8 @@ from PySide6.QtWidgets import QApplication
 from gui.mechanics import Robot
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = MainWindow()
+    app: QApplication = QApplication(sys.argv)
+    window: MainWindow = MainWindow()
     window.show()
     sys.exit(app.exec())
     
