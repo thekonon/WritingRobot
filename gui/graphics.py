@@ -8,7 +8,7 @@ from PySide6.QtGui import QPainter, QColor, QPen
 from PySide6.QtCore import Qt, QPointF, QRectF
 from typing import Callable, List
 from gui.mechanics.robot import Robot  # Adjust the import path as needed
-from math import cos, sin
+from math import cos, sin, pi
 
 
 class GridGraphicsView(QGraphicsView):
@@ -35,7 +35,7 @@ class GridGraphicsView(QGraphicsView):
         painter.setPen(grid_color)
 
         # Define grid spacing
-        grid_size = 20
+        grid_size: int = 20
 
         # Get the bounds of the scene
         left: int = int(rect.left())

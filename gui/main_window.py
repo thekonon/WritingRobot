@@ -1,6 +1,6 @@
 import sys
 from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton, QDial, QGridLayout, QWidget
-from PySide6.QtCore import Qt, Slot, Signal
+from PySide6.QtCore import Slot, Signal
 from gui.mechanics.robot import Robot
 from gui.graphics import MyGraphicsScene, GridGraphicsView, Drawer
 from gui.motor_dial import MotorDial

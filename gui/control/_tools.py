@@ -1,6 +1,6 @@
 import can
 import os
-from typing import List, Any
+from typing import List, Any, Literal
 from enum import Enum
 
 
@@ -12,7 +12,7 @@ class BitRates(Enum):
     """
 
     #: CAN bus bit rate of 125000 bits per second.
-    _125KHZ: int = 125000
+    _125KHZ = 125000
     """The value of the CAN bus bit rate of 125000 bits per second."""
 
 
