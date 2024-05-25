@@ -5,7 +5,7 @@ from gui.mechanics.robot import Robot
 from gui.graphics import MyGraphicsScene, GridGraphicsView, Drawer
 from gui.motor_dial import MotorDial
 from math import cos, sin, pi
-from typing import List
+from typing import List, Callable
 
 class MainWindow(QMainWindow):
     def __init__(self) -> None:
@@ -24,30 +24,11 @@ class MainWindow(QMainWindow):
         self.disconnect_button: QPushButton = QPushButton("Disconnect")
         self.disconnect_button.clicked.connect(self.disconnect)
 
-        self.motor1_dial: MotorDial = MotorDial()
-        self.motor1_dial.setMinimum(0)
-        self.motor1_dial.setMaximum(360)
-        self.motor1_dial.setWrapping(True)
-        self.motor1_dial.setNotchesVisible(True)
-        self.motor1_dial.setValue(int(self.robot.phi[0] / 3.14 * 180))
-        self.motor1_dial.setInvertedAppearance(True)
-        self.motor1_dial.dialValueWhileDragging.connect(self.set_motor1_speed)
-
-        self.motor2_dial: MotorDial = MotorDial()
-        self.motor2_dial.setMinimum(0)
-        self.motor2_dial.setMaximum(360)
-        self.motor2_dial.setValue(int(self.robot.phi[1] / 3.14 * 360))
-        self.motor2_dial.setWrapping(True)
-        self.motor2_dial.setNotchesVisible(True)
-        self.motor2_dial.setInvertedAppearance(True)
-        self.motor2_dial.dialValueWhileDragging.connect(self.set_motor2_speed)
+        self.motor1_dial: MotorDial = self.create_motor_dial(self.robot.phi[0], self.set_motor1_speed)
+        self.motor2_dial: MotorDial = self.create_motor_dial(self.robot.phi[1], self.set_motor2_speed)
 
         self.grid_layout: QGridLayout = QGridLayout()
-        self.grid_layout.addWidget(self.canvas_view, 0, 0, 1, 2)
-        self.grid_layout.addWidget(self.connect_button, 1, 0)
-        self.grid_layout.addWidget(self.disconnect_button, 1, 1)
-        self.grid_layout.addWidget(self.motor1_dial, 2, 0)
-        self.grid_layout.addWidget(self.motor2_dial, 2, 1)
+        self.add_widgets_to_grid_layout()
 
         central_widget: QWidget = QWidget()
         central_widget.setLayout(self.grid_layout)
@@ -56,6 +37,26 @@ class MainWindow(QMainWindow):
         self.drawer: Drawer = Drawer(self.robot, self.canvas_scene)
         self.drawer.draw()
         self.canvas_scene.set_updater(self.update_gui)
+
+    def add_widgets_to_grid_layout(self) -> None:
+        self.grid_layout.addWidget(self.canvas_view, 0, 0, 1, 2)
+        self.grid_layout.addWidget(self.connect_button, 1, 0)
+        self.grid_layout.addWidget(self.disconnect_button, 1, 1)
+        self.grid_layout.addWidget(self.motor1_dial, 2, 0)
+        self.grid_layout.addWidget(self.motor2_dial, 2, 1)
+
+    def create_motor_dial(self, value: float, slot_function: Callable) -> MotorDial:
+        dial: MotorDial = MotorDial()
+        dial.setMinimum(0)
+        dial.setMaximum(360)
+        dial.setValue(int(value / 3.14 * 180))
+        dial.setWrapping(True)
+        dial.setNotchesVisible(True)
+        dial.setInvertedAppearance(True)
+        dial.dialValueWhileDragging.connect(slot_function)
+        # Adjust the size of the dial
+        dial.setFixedSize(100, 100)
+        return dial
 
     def update_gui(self) -> None:
         self.drawer.draw()

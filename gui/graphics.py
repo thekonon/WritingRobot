@@ -3,9 +3,10 @@ from PySide6.QtWidgets import (
     QGraphicsView,
     QGraphicsLineItem,
     QGraphicsEllipseItem,
+    QSizePolicy
 )
 from PySide6.QtGui import QPainter, QColor, QPen
-from PySide6.QtCore import Qt, QPointF, QRectF # type: ignore
+from PySide6.QtCore import Qt, QPointF, QRectF, QSize # type: ignore
 from typing import Callable, List
 from gui.mechanics.robot import Robot  # Adjust the import path as needed
 from math import cos, sin, pi
@@ -19,6 +20,8 @@ class GridGraphicsView(QGraphicsView):
         self.setMouseTracking(True)
         self.zoom_factor: float = 1.25  # Zoom factor for each zoom step
         self.setRenderHint(QPainter.Antialiasing) # type: ignore
+        
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
     def wheelEvent(self, event) -> None:
         # Zoom in or out depending on the direction of the wheel event
@@ -50,7 +53,9 @@ class GridGraphicsView(QGraphicsView):
         # Draw horizontal grid lines
         for y in range(top - (top % grid_size), bottom, grid_size):
             painter.drawLine(left, y, right, y) # type: ignore
-
+    def sizeHint(self) -> QSize:
+        # Return the preferred size of the graphics view
+        return QSize(1500, 1500)  # Adjust the size as needed
 
 class MyGraphicsScene(QGraphicsScene):
     def __init__(self, robot: Robot) -> None:
