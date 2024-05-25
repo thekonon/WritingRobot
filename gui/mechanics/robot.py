@@ -49,8 +49,8 @@ class Robot:
         AB_2: float   = AB[0] ** 2 + AB[1] ** 2
         alfa_0: float = math.atan2(AB[1], AB[0])
         alfa_1: float = math.acos(AB_2/(2*self.l3*math.sqrt(AB_2)))
-        self.phi_3: float = alfa_0+alfa_1
-        self.phi_4: float = math.pi+alfa_0-alfa_1
+        self.phi_3 = alfa_0+alfa_1
+        self.phi_4 = math.pi+alfa_0-alfa_1
         
     def set_phi_2(self, phi_2: float) -> None:
         self.phi_2 = phi_2
@@ -60,8 +60,8 @@ class Robot:
         AB_2: float   = AB[0] ** 2 + AB[1] ** 2
         alfa_0: float = math.atan2(AB[1], AB[0])
         alfa_1: float = math.acos(AB_2/(2*self.l3*math.sqrt(AB_2)))
-        self.phi_3: float = alfa_0+alfa_1
-        self.phi_4: float = math.pi+alfa_0-alfa_1
+        self.phi_3 = alfa_0+alfa_1
+        self.phi_4 = math.pi+alfa_0-alfa_1
         
         
         
