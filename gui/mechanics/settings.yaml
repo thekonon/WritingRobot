@@ -1,0 +1,13 @@
+# Settings for the mechanics module
+# Arm lengths:
+lengths:
+  l1: 100
+  l2: 100
+  l3: 100
+  l4: 100
+  l5: 50
+
+# Initial position
+initial_position:
+  x_m: 0
+  y_m: 150

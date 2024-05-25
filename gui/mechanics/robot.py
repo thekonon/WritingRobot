@@ -1,37 +1,96 @@
 import math
-import time
-import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
+import yaml
+import os
 from typing import List, Tuple
 
 
 class Robot:
-    def __init__(
-        self,
-        lengths: tuple = (
-            100.0,
-            100.0,
-            100.0,
-            100.0,
-            50.0,
-        ),
-    ) -> None:
-        # Lengths of arms, l = (l1, l2, l3, l4), they're constant
-        self._lengths = (0.0, 0.0, 0.0, 0.0, 0.0)
+    def __init__(self, *args, **kwargs) -> None:
+        # Init variables
+        self._lengths: tuple = (0.0, 0.0, 0.0, 0.0, 0.0)
+        self._phi: List[float] = [0.0, 0.0, 0.0, 0.0]
+
         # End_points of arms
         self._r_m: List[float] = [25, 150]
-        # Init angles
-        self._phi = [0.0, 0.0, 0.0, 0.0]
 
-        # Set lengths
-        self.lengths = lengths
+        self._settings_file_path = self._get_settings_path()
+        self._load_settings()
+
+        # Overwrite the settings file if needed
+        if "lengths" in kwargs:
+            self.lengths = kwargs["lengths"]
+        if "initial_position" in kwargs:
+            self.r_m = kwargs["initial_position"]
 
         self._calculate_angles()
+
+    def get_motor_angles(self, r_m: List[float]) -> Tuple[float, float]:
+        """
+        Calculate motor angles based on the given end point position
+
+        Args:
+            r_m (List[float]): End point of the robot
+
+        Returns:
+            Tuple[float, float]: Motor angles in radians
+        """
+        # Set the current end point
+        self.r_m = r_m
+
+        # Recalculate the robot position
+        self._calculate_angles()
+        return (self._phi[0], self._phi[1])
+
+    def set_phi_1(self, phi_1: float) -> None:
+        self.phi_1 = phi_1
+        A: tuple = (self.l1 * math.cos(self.phi_1), self.l1 * math.sin(self.phi_1))
+        B: tuple = (self.l5 + self.l2 * math.cos(self.phi_2), self.l2 * math.sin(self.phi_2))
+        AB: tuple = (B[0] - A[0], B[1] - A[1])
+        AB_2: float   = AB[0] ** 2 + AB[1] ** 2
+        alfa_0: float = math.atan2(AB[1], AB[0])
+        alfa_1: float = math.acos(AB_2/(2*self.l3*math.sqrt(AB_2)))
+        self.phi_3 = alfa_0+alfa_1
+        self.phi_4 = math.pi+alfa_0-alfa_1
+        
+    def set_phi_2(self, phi_2: float) -> None:
+        self.phi_2 = phi_2
+        A: tuple = (self.l1 * math.cos(self.phi_1), self.l1 * math.sin(self.phi_1))
+        B: tuple = (self.l5 + self.l2 * math.cos(self.phi_2), self.l2 * math.sin(self.phi_2))
+        AB: tuple = (B[0] - A[0], B[1] - A[1])
+        AB_2: float   = AB[0] ** 2 + AB[1] ** 2
+        alfa_0: float = math.atan2(AB[1], AB[0])
+        alfa_1: float = math.acos(AB_2/(2*self.l3*math.sqrt(AB_2)))
+        self.phi_3 = alfa_0+alfa_1
+        self.phi_4 = math.pi+alfa_0-alfa_1
+        
+        
+        
+    def _load_settings(self) -> None:
+        settings = None
+        with open(self._settings_file_path, "r") as stream:
+            try:
+                settings = yaml.safe_load(stream)
+            except yaml.YAMLError as exc:
+                print(exc)
+        if settings:
+            # Load lengths
+            lengths_dict = settings["lengths"]
+            order = ["l1", "l2", "l3", "l4", "l5"]
+            self.lengths = tuple([lengths_dict[key] for key in order])
+
+            # Load initial position
+            initial_position_dict = settings["initial_position"]
+            self.r_m = [initial_position_dict["x_m"],
+                        initial_position_dict["y_m"]]
+
+            print(f"Settings loaded successfully")
+            print(f"Lengths: {self.lengths}")
+            print(f"initial position: {self.r_m}")
 
     def _calculate_angles(self):
         # Calculate angle phi_0 - see docu
         # TODO: add this to docu
-        print("recalculating angles")
+        print("Recalculating angles")
         # Total length of end point from origin
         r_m_abs_2 = self.r_m[0] ** 2 + self.r_m[1] ** 2
         r_m_abs = math.sqrt(r_m_abs_2)
@@ -51,11 +110,17 @@ class Robot:
         phi_2 = phi_p22 - phi_p21
 
         phi_4 = math.atan2(
-            r_m_2[1] - self.l2 * math.sin(phi_2), r_m_2[0] - self.l2 * math.cos(phi_2)
+            r_m_2[1] - self.l2 *
+            math.sin(phi_2), r_m_2[0] - self.l2 * math.cos(phi_2)
         )
 
         self.phi = [phi_1, phi_2, phi_3, phi_4]
         # [val/3.14*180 for val in self.phi]
+
+    def _get_settings_path(self):
+        current_dir = os.path.dirname(__file__)
+        settings_path = os.path.join(current_dir, 'settings.yaml')
+        return settings_path
 
     @property
     def r_m(self) -> List[float]:
@@ -176,68 +241,25 @@ class Robot:
     @l5.setter
     def l5(self, value: float):
         self._lengths = (self.l1, self.l2, self.l3, self.l4, value)
+        
+    def __iadd__(self, values: List[float]):
+        if len(values) != len(self._r_m):
+            raise ValueError("Length of values must match length of r_m")
+        self._r_m = [a + b for a, b in zip(self._r_m, values)]
+        self._calculate_angles()
+        return self
 
-
-class Drawer:
-    def __init__(self, robot: Robot):
-        self.robot: Robot = robot
-        self._init_matplotlib()
-
-    def draw(self):
-        self.ax.clear()  # Clear the previous plot
-        # Left part
-        end_point_1 = self._draw_line((0, 0), self.robot.phi_1, self.robot.l1)
-        end_point_3 = self._draw_line(end_point_1, self.robot.phi_3, self.robot.l3)
-        if end_point_1[1] < 0:
-            pass
-
-        # Right part
-        end_point_2 = self._draw_line(
-            (self.robot.l5, 0), self.robot.phi_2, self.robot.l2
-        )
-        end_point_4 = self._draw_line(end_point_2, self.robot.phi_4, self.robot.l4)
-
-        self._set_ax_limits()
-
-        plt.draw()  # Update the plot
-
-    def _init_matplotlib(self):
-        self.fig, self.ax = plt.subplots()
-        self._set_ax_limits()
-
-    def _set_ax_limits(self):
-        self.ax.set_xlim(-150, 150)
-        self.ax.set_ylim(-50, 250)
-
-    def _draw_line(self, start_point: tuple, phi: float, length: float) -> tuple:
-        end_point = (
-            start_point[0] + length * math.cos(phi),
-            start_point[1] + length * math.sin(phi),
-        )
-        self._plot_line(start_point, end_point)
-        return end_point
-
-    def _plot_line(self, start_point: tuple, end_point: tuple):
-        self.ax.plot(
-            (start_point[0], end_point[0], end_point[0]),
-            (start_point[1], end_point[1], end_point[1]),
-            label="Left Arm",
-            color="red",
-            linewidth=2,
-            linestyle="-",
-        )
+    def __isub__(self, values: List[float]):
+        if len(values) != len(self._r_m):
+            raise ValueError("Length of values must match length of r_m")
+        self._r_m = [a - b for a, b in zip(self._r_m, values)]
+        self._calculate_angles()
+        return self
 
 
 if __name__ == "__main__":
+    from .drawer import Drawer
     robot = Robot()
     drawer = Drawer(robot)
     drawer.draw()
     r_m_0 = robot.r_m
-
-    robot.x_m = 30
-    # w = 0.1
-    # for t in range(300):
-    #     robot.r_m = [r_m_0[0] + 30*math.sin(w*t), r_m_0[1] + 30*math.cos(w*t)]
-    #     robot._calculate_angles()
-    #     plt.pause(0.01)
-    #     drawer.draw()

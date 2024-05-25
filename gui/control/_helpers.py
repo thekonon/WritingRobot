@@ -1,8 +1,9 @@
+from typing import List
 class Calculations:
-    _FROM_MIN_VALUE = 0
-    _FROM_MAX_VALUE = 990
-    _MIN_VALUE = -360
-    _MAX_VALUE = 360
+    _FROM_MIN_VALUE: int = 0
+    _FROM_MAX_VALUE: int = 990
+    _MIN_VALUE: int = -360
+    _MAX_VALUE: int = 360
 
     @classmethod
     def map_to_data(cls, value):
@@ -54,4 +55,39 @@ class Calculations:
             int(hex_before_decimal[:2], 16),
             int(hex_before_decimal[2:], 16),
             int(hex_after_decimal, 16),
+        ]
+    @staticmethod
+    def value_to_hex_2(value: float) -> List[int]:
+        """New function to convert a motor rotation to can MSG
+            Solution to this ticket:
+            https://github.com/thekonon/WritingRobot/issues/7
+
+        Args:
+            value (float): Wanted motor rotation
+
+        Returns:
+            List[int]: List of ints representing half of the CAN frame
+            
+        E.G:
+        312.1234564 -> 312 and 1234567
+        keeps only 4 decimal digits -> 123457 -> 1234
+        312     -> 0x0138 -> 01 38
+        1234    -> 0x04d2 -> 04 d2
+        final output is [01, 38, 04, d2]
+        """
+        # Apply modulo 360 to keep the number within range 0-360
+        value = value % 360
+
+        # Split into whole and decimal parts
+        whole_part = int(value)
+        # Rounding the decimal part
+        decimal_part = int((value - whole_part + 1e-7) * 10000)
+
+        hex_before_decimal = format(whole_part, "04x")  # Padding to 4 characters
+        hex_after_decimal = format(decimal_part, "04x")  # Padding to 2 characters
+        return [
+            int(hex_before_decimal[:2], 16),
+            int(hex_before_decimal[2:], 16),
+            int(hex_after_decimal[:2], 16),
+            int(hex_after_decimal[2:], 16)
         ]
