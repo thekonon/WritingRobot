@@ -43,8 +43,11 @@ class CANCommunicationHandler:
         """Send all frames via can"""
         if not self._init_done:
             raise ValueError("Initialization needs to be done")
+        
         types = {"MotorDataFrame": self.motor_data_frame.get_msg()}
         msg = types.get(selected_type)
+        
+        print(f"msg: {msg}")
         if msg:
             self.bus.send(msg)
         else:
