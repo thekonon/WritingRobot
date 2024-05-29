@@ -1,8 +1,8 @@
 from typing import List
 class Calculations:
     _FROM_MIN_VALUE: int = 0
-    _FROM_MAX_VALUE: int = 990
-    _MIN_VALUE: int = -360
+    _FROM_MAX_VALUE: int = 360
+    _MIN_VALUE: int = 0
     _MAX_VALUE: int = 360
 
     @classmethod
