@@ -6,12 +6,12 @@ class Calculations:
     _MAX_VALUE: int = 360
 
     @classmethod
-    def map_to_data(cls, value):
-        mapped_value = cls.map_value(value)
-        return cls.value_to_hex(mapped_value)
+    def map_to_data(cls, value: float) -> List[int]:
+        mapped_value: float = cls.map_value(value)
+        return cls.value_to_hex_2(mapped_value)
 
     @classmethod
-    def map_value(cls, value: int):
+    def map_value(cls, value: float) -> float:
         return cls._map_value(
             value,
             cls._FROM_MIN_VALUE,
@@ -21,13 +21,13 @@ class Calculations:
         )
 
     @staticmethod
-    def _map_value(value, from_min, from_max, to_min, to_max):
+    def _map_value(value: float, from_min: float, from_max: float, to_min: float, to_max: float):
         if from_max < from_min:
             raise ValueError("Max must be bigger - from")
         if to_max < to_min:
             raise ValueError("Max must be bigger - to")
 
-        procent = value / (from_max - from_min)
+        procent: float = value / (from_max - from_min)
         return to_min + procent * (to_max - to_min)
 
     @staticmethod

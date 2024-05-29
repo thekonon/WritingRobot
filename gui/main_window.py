@@ -6,11 +6,15 @@ from gui.graphics import MyGraphicsScene, GridGraphicsView, Drawer
 from gui.motor_dial import MotorDial
 from math import cos, sin, pi
 from typing import List, Callable
+from .control._tools import CANCommunicationHandler, MotorDataFrame
+from .control._helpers import Calculations
 
 class MainWindow(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
         self.robot: Robot = Robot()
+        self.can_communication: CANCommunicationHandler = CANCommunicationHandler()
+        self.data: MotorDataFrame = MotorDataFrame(total_motors=2)
 
         self.setWindowTitle("RobotController")
         self.setGeometry(100, 100, 600, 600)
@@ -66,19 +70,27 @@ class MainWindow(QMainWindow):
     @Slot()
     def connect(self) -> None:
         print("Connect button clicked")
+        self.can_communication.init_communication()
+        
 
     @Slot()
     def disconnect(self) -> None:
         print("Disconnect button clicked")
+        self.can_communication.end_communication()
+        
 
     @Slot(int)
-    def set_motor1_speed(self, value) -> None:
+    def set_motor1_speed(self, value: float) -> None:
         print("Motor 1 speed set to:", value)
         self.robot.set_phi_1(value / 180 * 3.14)
         self.drawer.draw()
+        self.can_communication.motor_data_frame.set_data(Calculations.map_to_data(value))
+        self.can_communication.send_data("MotorDataFrame")
+        
+        
 
     @Slot(int)
-    def set_motor2_speed(self, value) -> None:
+    def set_motor2_speed(self, value: float) -> None:
         print("Motor 2 speed set to:", value)
         self.robot.set_phi_2(value / 180 * 3.14)
         self.drawer.draw()
