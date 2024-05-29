@@ -64,8 +64,13 @@ class MainWindow(QMainWindow):
 
     def update_gui(self) -> None:
         self.drawer.draw()
-        self.motor1_dial.setValue(int(self.robot.phi[0] / 3.14 * 180))
-        self.motor2_dial.setValue(int(self.robot.phi[1] / 3.14 * 360))
+        motor_1_value: int = int(self.robot.phi[0] / 3.14 * 180)
+        motor_2_value: int = int(self.robot.phi[1] / 3.14 * 360)
+        self.motor1_dial.setValue(motor_1_value)
+        self.motor2_dial.setValue(motor_2_value)
+        self.can_communication.motor_data_frame.set_data(Calculations.map_to_data(motor_1_value), motor = 0)
+        self.can_communication.motor_data_frame.set_data(Calculations.map_to_data(motor_2_value), motor = 1)
+        self.can_communication.send_data("MotorDataFrame")
 
     @Slot()
     def connect(self) -> None:
