@@ -75,7 +75,7 @@ class Robot:
         if settings:
             # Load lengths
             lengths_dict = settings["lengths"]
-            order = ["l1", "l2", "l3", "l4", "l5"]
+            order: list[str] = ["l1", "l2", "l3", "l4", "l5"]
             self.lengths = tuple([lengths_dict[key] for key in order])
 
             # Load initial position
@@ -83,14 +83,14 @@ class Robot:
             self.r_m = [initial_position_dict["x_m"],
                         initial_position_dict["y_m"]]
 
-            print(f"Settings loaded successfully")
-            print(f"Lengths: {self.lengths}")
-            print(f"initial position: {self.r_m}")
+            # print(f"Settings loaded successfully")
+            # print(f"Lengths: {self.lengths}")
+            # print(f"initial position: {self.r_m}")
 
     def _calculate_angles(self):
         # Calculate angle phi_0 - see docu
         # TODO: add this to docu
-        print("Recalculating angles")
+        # print("Recalculating angles")
         # Total length of end point from origin
         r_m_abs_2 = self.r_m[0] ** 2 + self.r_m[1] ** 2
         r_m_abs = math.sqrt(r_m_abs_2)
