@@ -90,7 +90,7 @@ class MainWindow(QMainWindow):
         self.robot.set_phi_1(value / 180 * 3.14)
         self.drawer.draw()
         self.can_communication.motor_data_frame.set_data(Calculations.map_to_data(value), motor = 0)
-        print("Sending data")
+        print(f"Sending data: {self.can_communication.motor_data_frame.data}")
         self.can_communication.send_data("MotorDataFrame")
         
         
@@ -101,5 +101,5 @@ class MainWindow(QMainWindow):
         self.robot.set_phi_2(value / 180 * 3.14)
         self.drawer.draw()
         self.can_communication.motor_data_frame.set_data(Calculations.map_to_data(value), motor = 1)
-        print("Sending data")
+        print(f"Sending data: {self.can_communication.motor_data_frame.data}")
         self.can_communication.send_data("MotorDataFrame")
