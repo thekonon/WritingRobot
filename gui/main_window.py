@@ -1,6 +1,5 @@
 import sys
 import datetime
-import win32api
 import os
 from PySide6.QtWidgets import QMainWindow, QPushButton, QGridLayout, QWidget, QHBoxLayout, QVBoxLayout
 from PySide6.QtCore import Slot, Signal
@@ -36,8 +35,9 @@ class MainWindow(QMainWindow):
         Create a basic window, set the dimensions
         """
         self._log("Setting up the application")
-        screen_width: int = win32api.GetSystemMetrics(0)
-        screen_height: int = win32api.GetSystemMetrics(1)
+        # import win32api
+        screen_width: int = 1920 # win32api.GetSystemMetrics(0)
+        screen_height: int = 1080 # win32api.GetSystemMetrics(1)
 
         self.setWindowTitle("RobotController")
         self.setGeometry((screen_width-Constants.APP_WIDTH)//2,
