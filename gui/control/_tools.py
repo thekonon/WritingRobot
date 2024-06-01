@@ -46,6 +46,7 @@ class CANCommunicationHandler:
         types = {"MotorDataFrame": self.motor_data_frame.get_msg()}
         msg = types.get(selected_type)
         if msg:
+            print("Sending msg!")
             self.bus.send(msg)
         else:
             raise ValueError("Uknown type message selected")
@@ -61,6 +62,8 @@ class CANCommunicationHandler:
         self._init_done = 1
 
     def end_communication(self) -> None:
+        if not self._init_done:
+            return None
         self.bus.shutdown()
         os.system("sudo ip link set can0 down")
 

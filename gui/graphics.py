@@ -15,11 +15,50 @@ from math import cos, sin, pi
 class GridGraphicsView(QGraphicsView):
     def __init__(self, scene: QGraphicsScene|None = None) -> None:
         super().__init__(scene)
+        self.setTransformationAnchor(QGraphicsView.AnchorUnderMouse)
+        self.setResizeAnchor(QGraphicsView.AnchorUnderMouse)
+        self.setMouseTracking(True)
+        self.zoom_factor: float = 1.25  # Zoom factor for each zoom step
+        self.setRenderHint(QPainter.Antialiasing) # type: ignore
+        
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding) # type: ignore
+
+    def wheelEvent(self, event) -> None:
+        # Zoom in or out depending on the direction of the wheel event
+        if event.angleDelta().y() > 0:
+            self.scale(self.zoom_factor, self.zoom_factor)
+        else:
+            self.scale(1 / self.zoom_factor, 1 / self.zoom_factor)
+
+    def drawBackground(self, painter: QPainter, rect: QRectF) -> None:
+        super().drawBackground(painter, rect)
+
+        # Set grid color and style
+        grid_color: QColor = QColor(200, 200, 200)
+        painter.setPen(grid_color) # type: ignore
+
+        # Define grid spacing
+        grid_size: int = 20
+
+        # Get the bounds of the scene
+        left: int = int(rect.left())
+        right: int = int(rect.right())
+        top: int = int(rect.top())
+        bottom: int = int(rect.bottom())
+
+        # Draw vertical grid lines
+        for x in range(left - (left % grid_size), right, grid_size):
+            painter.drawLine(x, top, x, bottom) # type: ignore
+
+        # Draw horizontal grid lines
+        for y in range(top - (top % grid_size), bottom, grid_size):
+            painter.drawLine(left, y, right, y) # type: ignore
+
 
 class MyGraphicsScene(QGraphicsScene):
-    def __init__(self, robot: Robot|None = None) -> None:
+    def __init__(self, robot: Robot = Robot()) -> None:
         super().__init__()
-        self.robot: Robot|None = robot
+        self.robot: Robot = robot
         self.on_left_hold: bool = False
         self.on_right_hold: bool = False
         self.last_pos: QPointF = QPointF()
