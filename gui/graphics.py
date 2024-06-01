@@ -21,7 +21,7 @@ class GridGraphicsView(QGraphicsView):
         self.zoom_factor: float = 1.25  # Zoom factor for each zoom step
         self.setRenderHint(QPainter.Antialiasing) # type: ignore
         
-        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)  # type: ignore
 
     def wheelEvent(self, event) -> None:
         # Zoom in or out depending on the direction of the wheel event
