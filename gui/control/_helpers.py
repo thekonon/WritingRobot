@@ -1,14 +1,14 @@
 from typing import List
 class Calculations:
     _FROM_MIN_VALUE: int = 0
-    _FROM_MAX_VALUE: int = 990
-    _MIN_VALUE: int = -360
+    _FROM_MAX_VALUE: int = 360
+    _MIN_VALUE: int = 0
     _MAX_VALUE: int = 360
 
     @classmethod
     def map_to_data(cls, value):
         mapped_value = cls.map_value(value)
-        return cls.value_to_hex(mapped_value)
+        return cls.value_to_hex_2(mapped_value)
 
     @classmethod
     def map_value(cls, value: int):
@@ -77,6 +77,7 @@ class Calculations:
         """
         # Apply modulo 360 to keep the number within range 0-360
         value = value % 360
+        print(f"Value of motor: {value}")
 
         # Split into whole and decimal parts
         whole_part = int(value)

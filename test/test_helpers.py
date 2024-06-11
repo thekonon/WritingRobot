@@ -5,6 +5,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 root_dir = os.path.abspath(os.path.join(current_dir, '..'))
 sys.path.append(root_dir)
 
+
 import gui.control._helpers as _helpers
 
 def test_map_to_data():
