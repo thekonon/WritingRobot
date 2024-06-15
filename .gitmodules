@@ -1,0 +1,3 @@
+[submodule "arduino/NJLearner"]
+	path = arduino/NJLearner
+	url = https://github.com/thekonon/NJLearner
