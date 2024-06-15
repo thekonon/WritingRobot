@@ -1,3 +1,6 @@
 [submodule "arduino/Unity"]
 	path = arduino/Unity
 	url = https://github.com/ThrowTheSwitch/Unity
+[submodule "arduino/arduino-mcp2515"]
+	path = arduino/arduino-mcp2515
+	url = https://github.com/autowp/arduino-mcp2515
