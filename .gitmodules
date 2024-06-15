@@ -1,3 +1,6 @@
 [submodule "arduino/NJLearner"]
 	path = arduino/NJLearner
 	url = https://github.com/thekonon/NJLearner
+[submodule "arduino/Unity"]
+	path = arduino/Unity
+	url = https://github.com/ThrowTheSwitch/Unity
