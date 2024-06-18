@@ -1,7 +1,7 @@
 #include "unity.h"
 #include "motor_control.h"
-#include <constants.h>
-#include <math.h>
+#include "constants.h"
+#include "math.h"
 
 void setUp(void) {
     // Set up before each test

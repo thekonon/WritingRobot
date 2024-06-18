@@ -1,7 +1,9 @@
 #include <SPI.h>
 #include <mcp2515.h>
 #include <math.h>
-#include <constants.h>
+#include "src/constants.h"
+// #include "src/motor_control.h"
+// #include "src/steps_sender.h"
 
 // Variables
 struct can_frame canMsg1;
@@ -19,7 +21,6 @@ int steps_needed_motor_2 = 0;
 
 // Function prototypes
 float read_and_filter();
-int calculate_required_steps(float filtered_value, int *current_step);
 void send_steps_motor_1(int steps);
 void send_steps_motor_2(int steps);
 void one_step_motor_1();
@@ -73,12 +74,12 @@ void loop() {
     // Serial.print(motor_1_current_angle);
 
     // Calculate required steps
-    steps_needed_motor_1 = calculate_required_steps(motor_1_angle_wanted, &motor_1_current_angle);
-    steps_needed_motor_2 = calculate_required_steps(motor_2_angle_wanted, &motor_2_current_angle);
+    // steps_needed_motor_1 = calculate_required_steps(motor_1_angle_wanted, current_step_motor_1);
+    // steps_needed_motor_2 = calculate_required_steps(motor_2_angle_wanted, current_step_motor_2);
 
-    send_steps_motor_1(steps_needed_motor_1);
-    send_steps_motor_2(steps_needed_motor_2);
-    delay(TIME_AFTER_STEPS);  // Delay in milliseconds
+    // send_steps_motor_1(steps_needed_motor_1);
+    // send_steps_motor_2(steps_needed_motor_2);
+    // delay(TIME_AFTER_STEPS);  // Delay in milliseconds
   }
   //Serial.println("Sending 10 steps");
 
@@ -86,33 +87,9 @@ void loop() {
 }
 
 void set_position_motor_1(float position){
-    steps_needed_motor_1 = calculate_required_steps(position, &current_step_motor_1);
+    // steps_needed_motor_1 = calculate_required_steps(position, &current_step_motor_1);
     printf("Needed steps: %d\n", steps_needed_motor_1);
     send_steps_motor_1(steps_needed_motor_1);
-}
-
-int calculate_required_steps(float wanted_angle, float *current_angle) {
-  // Calculate the difference in angle
-  float diff = *current_angle - wanted_angle;
-
-  // Normalize the difference to be within the range [-180, 180)
-  if (diff > 180) {
-    diff -= 360;
-  } else if (diff < -180) {
-    diff += 360;
-  }
-
-  // Calculate steps needed
-  int steps_needed = (int)(diff / STEP_ANGLE * MICRO_STEP);
-
-  // Update the current angle
-  float res = steps_needed * STEP_ANGLE / MICRO_STEP;
-  *current_angle = fmod(*current_angle - res, 360);
-  if (*current_angle < 0) {
-    *current_angle += 360;
-  }
-
-  return steps_needed;  // Return the calculated steps
 }
 
 void send_steps_motor_1(int steps) {

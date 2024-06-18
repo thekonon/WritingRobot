@@ -8,9 +8,15 @@ set(CMAKE_C_STANDARD 23)
 include_directories(${PROJECT_SOURCE_DIR}/arduino/src)
 include_directories(${PROJECT_SOURCE_DIR}/arduino/unity/src)
 
+
+# include_directories("C:\\Users\\theko\\AppData\\Local\\Arduino15\\packages\\arduino\\tools\\avr-gcc\\7.3.0-atmel3.6.1-arduino7\\avr\\include")
+# include_directories("C:\\Users\\theko\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\cores\\arduino")
+# include_directories("C:\\Users\\theko\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\variants")
+
+
 # Source files
 set(SRC_FILES
-    arduino/src/motor_control.c
+    arduino/src/motor_control.cpp
 )
 
 set(TEST_FILES
