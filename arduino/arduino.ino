@@ -2,8 +2,8 @@
 #include <mcp2515.h>
 #include <math.h>
 #include "src/constants.h"
-// #include "src/motor_control.h"
-// #include "src/steps_sender.h"
+#include "src/motor_control.h"
+#include "src/steps_sender.h"
 
 // Variables
 struct can_frame canMsg1;
@@ -20,11 +20,6 @@ int current_step_motor_2 = 0;
 int steps_needed_motor_2 = 0;
 
 // Function prototypes
-float read_and_filter();
-void send_steps_motor_1(int steps);
-void send_steps_motor_2(int steps);
-void one_step_motor_1();
-void one_step_motor_2();
 void set_position_motor_1(float angle);
 void set_position_motor_2(float angle);
 
@@ -52,88 +47,20 @@ void setup() {
 
 void loop() {
   if (mcp2515.readMessage(&canMsg1) == MCP2515::ERROR_OK) {
-    // Serial.print("CAN MSG found, id: ");
-    // Serial.print(canMsg1.can_id, HEX);
-    // Serial.print(" DLC: ");
-    // Serial.print(canMsg1.can_dlc, HEX);
-    // Serial.print(" Data: ");
-    // for (int i = 0; i < canMsg1.can_dlc; i++) {
-    //   Serial.print(canMsg1.data[i], HEX);
-    //   Serial.print(" | ");
-    // }
-    // Serial.println();
 
     // Get required position from CAN
     motor_1_angle_wanted = canMsg1.data[0] * 255 + canMsg1.data[1];// + float(canMsg1.data[2] * 255 + canMsg1.data[3]) / 10000;
     motor_2_angle_wanted = canMsg1.data[4] * 255 + canMsg1.data[5];// + float(canMsg1.data[6] * 255 + canMsg1.data[7]) / 10000;
 
-    // Serial.print("Value wanted: ");
-    // Serial.print(motor_1_angle_wanted);
-
-    // Serial.print(" Current value: ");
-    // Serial.print(motor_1_current_angle);
-
     // Calculate required steps
-    // steps_needed_motor_1 = calculate_required_steps(motor_1_angle_wanted, current_step_motor_1);
-    // steps_needed_motor_2 = calculate_required_steps(motor_2_angle_wanted, current_step_motor_2);
+    steps_needed_motor_1 = calculate_required_steps(motor_1_angle_wanted, current_step_motor_1);
+    steps_needed_motor_2 = calculate_required_steps(motor_2_angle_wanted, current_step_motor_2);
 
-    // send_steps_motor_1(steps_needed_motor_1);
-    // send_steps_motor_2(steps_needed_motor_2);
-    // delay(TIME_AFTER_STEPS);  // Delay in milliseconds
+    send_steps_motor_1(steps_needed_motor_1);
+    send_steps_motor_2(steps_needed_motor_2);
+    delay(TIME_AFTER_STEPS);  // Delay in milliseconds
   }
   //Serial.println("Sending 10 steps");
 
   //delay(250);
-}
-
-void set_position_motor_1(float position){
-    // steps_needed_motor_1 = calculate_required_steps(position, &current_step_motor_1);
-    printf("Needed steps: %d\n", steps_needed_motor_1);
-    send_steps_motor_1(steps_needed_motor_1);
-}
-
-void send_steps_motor_1(int steps) {
-  // Set direction
-  if (steps < 0) {
-    steps = abs(steps);
-    Serial.println("Setting the dir pin of motor 1 to HIGH");
-    digitalWrite(DIR_PIN_MOTOR_1, HIGH);  // Set DIR_PIN_MOTOR_1 LOW
-  } else {
-    Serial.println("Setting the dir pin of motor 1 to LOW");
-    digitalWrite(DIR_PIN_MOTOR_1, LOW);  // Set DIR_PIN_MOTOR_1 HIGH
-  }
-
-  // Send steps
-  for (int i = 0; i < steps; i++) {
-    one_step_motor_1();
-    delay(TIME_BETWEEN_STEPS);  // Delay in milliseconds
-  }
-}
-
-void send_steps_motor_2(int steps) {
-  // Set direction
-  if (steps < 0) {
-    steps = abs(steps);
-    PORTD &= ~(1 << DIR_PIN_MOTOR_2);  // Set DIR_PIN_MOTOR_2 LOW
-  } else {
-    PORTD |= (1 << DIR_PIN_MOTOR_2);  // Set DIR_PIN_MOTOR_2 HIGH
-  }
-
-  // Send steps
-  for (int i = 0; i < steps; i++) {
-    one_step_motor_2();
-    delay(TIME_BETWEEN_STEPS);  // Delay in milliseconds
-  }
-}
-
-void one_step_motor_1() {
-  PORTD &= ~(1 << STEP_PIN_MOTOR_1);  // Set STEP_PIN_MOTOR_1 LOW
-  delayMicroseconds(TIME_ON_HIGH);
-  PORTD |= (1 << STEP_PIN_MOTOR_1);  // Set STEP_PIN_MOTOR_1 HIGH
-}
-
-void one_step_motor_2() {
-  PORTD &= ~(1 << STEP_PIN_MOTOR_2);  // Set STEP_PIN_MOTOR_2 LOW
-  delayMicroseconds(TIME_ON_HIGH);
-  PORTD |= (1 << STEP_PIN_MOTOR_2);  // Set STEP_PIN_MOTOR_2 HIGH
 }

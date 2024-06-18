@@ -1,5 +1,6 @@
 #include "steps_sender.h"
 #include "constants.h"
+#include "Arduino.h"
 
 void send_steps_motor_1(int steps) {
   // Set direction
