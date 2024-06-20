@@ -6,10 +6,8 @@ void send_steps_motor_1(int steps) {
   // Set direction
   if (steps < 0) {
     steps = abs(steps);
-    Serial.println("Setting the dir pin of motor 1 to HIGH");
     digitalWrite(DIR_PIN_MOTOR_1, 1);  // Set DIR_PIN_MOTOR_1 LOW
   } else {
-    Serial.println("Setting the dir pin of motor 1 to LOW");
     digitalWrite(DIR_PIN_MOTOR_1, 0);  // Set DIR_PIN_MOTOR_1 HIGH
   }
 

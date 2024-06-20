@@ -47,7 +47,6 @@ void setup() {
 
 void loop() {
   if (mcp2515.readMessage(&canMsg1) == MCP2515::ERROR_OK) {
-
     // Get required position from CAN
     motor_1_angle_wanted = canMsg1.data[0] * 255 + canMsg1.data[1];// + float(canMsg1.data[2] * 255 + canMsg1.data[3]) / 10000;
     motor_2_angle_wanted = canMsg1.data[4] * 255 + canMsg1.data[5];// + float(canMsg1.data[6] * 255 + canMsg1.data[7]) / 10000;
@@ -56,6 +55,7 @@ void loop() {
     steps_needed_motor_1 = calculate_required_steps(motor_1_angle_wanted, current_step_motor_1);
     steps_needed_motor_2 = calculate_required_steps(motor_2_angle_wanted, current_step_motor_2);
 
+    // Send the steps
     send_steps_motor_1(steps_needed_motor_1);
     send_steps_motor_2(steps_needed_motor_2);
     delay(TIME_AFTER_STEPS);  // Delay in milliseconds
