@@ -12,11 +12,11 @@
 #define MICRO_STEP 16         // How much steps for one step
 
 // Pins MOTOR 1
-#define DIR_PIN_MOTOR_1 5
-#define STEP_PIN_MOTOR_1 6
+#define DIR_PIN_MOTOR_1 5       // Pin number for DIR_PIR of motor1
+#define STEP_PIN_MOTOR_1 6      // Pin number for STEP_PIR of motor1
 
 // Pins MOTOR 2
-#define DIR_PIN_MOTOR_2 3
-#define STEP_PIN_MOTOR_2 4
+#define DIR_PIN_MOTOR_2 3       // Pin number for DIR_PIR of motor2
+#define STEP_PIN_MOTOR_2 4      // Pin number for STEP_PIR of motor2
 
 #endif
