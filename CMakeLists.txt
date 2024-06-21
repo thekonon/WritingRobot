@@ -1,31 +1,27 @@
 cmake_minimum_required(VERSION 3.10)
-project(MotorControlTests)
+project(MotorControlTests)  # Project name
 
-# Specify the C standard
-set(CMAKE_C_STANDARD 23)
+# Specify the C++ standard
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Include directories
-include_directories(${PROJECT_SOURCE_DIR}/arduino/src)
-include_directories(${PROJECT_SOURCE_DIR}/arduino/unity/src)
-
-
-# include_directories("C:\\Users\\theko\\AppData\\Local\\Arduino15\\packages\\arduino\\tools\\avr-gcc\\7.3.0-atmel3.6.1-arduino7\\avr\\include")
-# include_directories("C:\\Users\\theko\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\cores\\arduino")
-# include_directories("C:\\Users\\theko\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\variants")
-
+include_directories(${PROJECT_SOURCE_DIR}/platformIO/PsaciRobot/lib/WritingRobotLib/src)
+include_directories(${PROJECT_SOURCE_DIR}/platformIO/PsaciRobot/test/test_steps_sender)
+include_directories(${PROJECT_SOURCE_DIR}/unity/src)
 
 # Source files
 set(SRC_FILES
-    arduino/src/motor_control.cpp
+    platformIO/PsaciRobot/lib/WritingRobotLib/src/motor_control.cpp
+    platformIO/PsaciRobot/lib/WritingRobotLib/src/steps_sender.cpp
+    platformIO/PsaciRobot/test/test_steps_sender/MockArduino.cpp
 )
 
 set(TEST_FILES
-    arduino/test/test_motor_control.c
-    arduino/unity/src/unity.c
+    platformIO/PsaciRobot/test/test_steps_sender/test_steps_sender.cpp
+    unity/src/unity.c
 )
 
 # Add the executable
 add_executable(test_runner ${SRC_FILES} ${TEST_FILES})
-
-# Add the executable for main program
-# add_executable(main_program ${SRC_FILES})
+set_property(TARGET test_runner PROPERTY COMPILE_DEFINITIONS UNIT_TEST)

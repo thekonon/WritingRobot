@@ -1,6 +1,14 @@
 #ifndef STEPS_SENDER_H
 #define STEPS_SENDER_H
 
+#include "constants.h"
+
+#ifdef UNIT_TEST
+#include "MockArduino.h"
+#else
+#include <Arduino.h>
+#endif
+
 void set_motor_1_dir(bool dir);
 void set_motor_2_dir(bool dir);
 void send_steps_motor_1(int steps);

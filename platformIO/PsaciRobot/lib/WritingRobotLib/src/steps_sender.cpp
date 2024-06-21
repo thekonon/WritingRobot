@@ -1,6 +1,4 @@
 #include "steps_sender.h"
-#include "constants.h"
-#include "Arduino.h"
 
 int stepCounterA = 0;
 int stepCounterB = 0;
