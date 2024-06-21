@@ -4,6 +4,8 @@ project(MotorControlTests)  # Project name
 # Specify the C++ standard
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_BINARY_DIR ${PROJECT_SOURCE_DIR}/platformIO/PsaciRobot/build)
+
 
 # Include directories
 include_directories(${PROJECT_SOURCE_DIR}/platformIO/PsaciRobot/lib/WritingRobotLib/src)
@@ -17,11 +19,11 @@ set(SRC_FILES
     platformIO/PsaciRobot/test/test_steps_sender/MockArduino.cpp
 )
 
-set(TEST_FILES
+set(TEST_STEPS_SENDER_FILES
     platformIO/PsaciRobot/test/test_steps_sender/test_steps_sender.cpp
     unity/src/unity.c
 )
 
 # Add the executable
-add_executable(test_runner ${SRC_FILES} ${TEST_FILES})
-set_property(TARGET test_runner PROPERTY COMPILE_DEFINITIONS UNIT_TEST)
+add_executable(test_steps_sender ${SRC_FILES} ${TEST_STEPS_SENDER_FILES})
+set_property(TARGET test_steps_sender PROPERTY COMPILE_DEFINITIONS UNIT_TEST)
