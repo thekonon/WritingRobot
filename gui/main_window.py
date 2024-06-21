@@ -16,32 +16,33 @@ class Constants:
     APP_WIDTH: int = 900
     APP_HEIGHT: int = 800
 
+
 class MainWindow(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
         self._log("Creating robot started")
         self.robot: Robot = Robot()
-        
+
         self._set_up_app()
         self._create_widgets()
-        self._set_up_drawer()       
+        self._set_up_drawer()
         self._set_up_communication()
         self._add_widgets()
-        
+
         self.update_gui()
-        
+
     def _set_up_app(self) -> None:
         """
         Create a basic window, set the dimensions
         """
         self._log("Setting up the application")
         # import win32api
-        screen_width: int = 1920 # win32api.GetSystemMetrics(0)
-        screen_height: int = 1080 # win32api.GetSystemMetrics(1)
+        screen_width: int = 1920  # win32api.GetSystemMetrics(0)
+        screen_height: int = 1080  # win32api.GetSystemMetrics(1)
 
         self.setWindowTitle("RobotController")
         self.setGeometry((screen_width-Constants.APP_WIDTH)//2,
-                         (screen_height-Constants.APP_HEIGHT)//2, 
+                         (screen_height-Constants.APP_HEIGHT)//2,
                          Constants.APP_WIDTH,
                          Constants.APP_HEIGHT)
 
@@ -50,25 +51,28 @@ class MainWindow(QMainWindow):
         Add the widgets to the window
         """
         self._log("Creating widgets started")
-        
+
         self.main_widget = QWidget()
-        
+
         # Creating layout for main_widget
         self.main_layout = QVBoxLayout()
-        
+
         # Adding a single button to main_layout
         self.graphics_scene: MyGraphicsScene = MyGraphicsScene(self.robot)
-        self.graphics_view: GridGraphicsView = GridGraphicsView(self.graphics_scene)
-        
+        self.graphics_view: GridGraphicsView = GridGraphicsView(
+            self.graphics_scene)
+
         # Creating layout for buttons
         self.motor_dial_layout = QHBoxLayout()
 
         # Adding Motor dial 1
-        self.motor_dial_1: MotorDial = self._create_motor_dial(10, self.set_motor1_speed)
-        
+        self.motor_dial_1: MotorDial = self._create_motor_dial(
+            10, self.set_motor1_speed)
+
         # Adding Motor dial 2
-        self.motor_dial_2: MotorDial = self._create_motor_dial(10, self.set_motor2_speed)
-        
+        self.motor_dial_2: MotorDial = self._create_motor_dial(
+            10, self.set_motor2_speed)
+
         # Adding Connect / disconned buttons
         self.button_layout = QVBoxLayout()
         self.connect_button = QPushButton("Connect")
@@ -79,7 +83,7 @@ class MainWindow(QMainWindow):
         self.disconnect_button.setMaximumWidth(200)
         self.disconnect_button.setStyleSheet("padding: 20px;")
         self.disconnect_button.clicked.connect(self.disconnect)
-        
+
     def _add_widgets(self):
         self._log("Creating app - adding widgets")
         self.setCentralWidget(self.main_widget)
@@ -91,16 +95,16 @@ class MainWindow(QMainWindow):
         self.button_layout.addWidget(self.disconnect_button)
         self.motor_dial_layout.addLayout(self.button_layout)
         self.main_layout.addLayout(self.motor_dial_layout)
-    
+
     def _set_up_drawer(self):
         self._log("Setting up drawer")
         self.drawer = Drawer(self.robot, self.graphics_scene)
         self.graphics_scene.set_updater(self.update_gui)
-        
+
     def _set_up_communication(self):
         self.can_communication: CANCommunicationHandler = CANCommunicationHandler()
         self.data: MotorDataFrame = MotorDataFrame(total_motors=2)
-    
+
     def _create_motor_dial(self, value: float, slot_function: Callable) -> MotorDial:
         dial: MotorDial = MotorDial()
         dial.setMinimum(0)
@@ -120,13 +124,14 @@ class MainWindow(QMainWindow):
         motor_2_value: int = int(self.robot.phi[1] / 3.14 * 360)
         self.motor_dial_1.setValue(motor_1_value)
         self.motor_dial_2.setValue(motor_2_value)
-        self.can_communication.motor_data_frame.set_data(Calculations.map_to_data(motor_1_value), motor = 0)
-        self.can_communication.motor_data_frame.set_data(Calculations.map_to_data(motor_2_value), motor = 1)
+        self.can_communication.motor_data_frame.set_data(
+            Calculations.map_to_data(motor_1_value), motor=0)
+        self.can_communication.motor_data_frame.set_data(
+            Calculations.map_to_data(motor_2_value), motor=1)
         try:
             self.can_communication.send_data("MotorDataFrame")
         except ValueError as ex:
             pass
-        
 
     @Slot()
     def connect(self) -> None:
@@ -145,16 +150,18 @@ class MainWindow(QMainWindow):
     def set_motor1_speed(self, value) -> None:
         self.robot.set_phi_1(value*3.14/180)
         self.drawer.draw()
-        self.can_communication.motor_data_frame.set_data(Calculations.map_to_data(value), motor = 0)
+        self.can_communication.motor_data_frame.set_data(
+            Calculations.map_to_data(value), motor=0)
         self.can_communication.send_data("MotorDataFrame")
 
     @Slot(int)
     def set_motor2_speed(self, value) -> None:
         self.robot.set_phi_2(value*3.14/180)
         self.drawer.draw()
-        self.can_communication.motor_data_frame.set_data(Calculations.map_to_data(value), motor = 1)
+        self.can_communication.motor_data_frame.set_data(
+            Calculations.map_to_data(value), motor=1)
         self.can_communication.send_data("MotorDataFrame")
-    
+
     def _log(self, message: str) -> None:
         current_time: datetime.time = datetime.datetime.now().time()
         formatted_time: str = current_time.strftime("%H:%M:%S.%f")[:10]

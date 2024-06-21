@@ -6,7 +6,4 @@ void moveArc(int stepsA, int stepsB, int speedA, int speedB);
 int calculate_required_steps(float wanted_angle, int current_step);
 
 
-extern int stepCounterA;
-extern int stepCounterB;
-
 #endif // MOTOR_CONTROL_H
