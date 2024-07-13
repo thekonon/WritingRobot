@@ -5,3 +5,5 @@ venv
 /create_requirements.bat
 WritingRobotV2-backups
 build
+Makefile.txt
+lib
