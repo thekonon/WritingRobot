@@ -1,7 +1,8 @@
 import sys
 import datetime
 import os
-from PySide6.QtWidgets import QMainWindow, QPushButton, QGridLayout, QWidget, QHBoxLayout, QVBoxLayout
+import gui.constants as constants
+from PySide6.QtWidgets import QMainWindow, QPushButton, QGridLayout, QWidget, QHBoxLayout, QVBoxLayout, QApplication
 from PySide6.QtCore import Slot, Signal
 from gui.mechanics.robot import Robot
 from gui.graphics import MyGraphicsScene, GridGraphicsView, Drawer
@@ -11,15 +12,12 @@ from gui.control._helpers import Calculations
 from math import cos, sin, pi
 from typing import List, Callable
 
-
-class Constants:
-    APP_WIDTH: int = 900
-    APP_HEIGHT: int = 800
-
-
 class MainWindow(QMainWindow):
-    def __init__(self) -> None:
+    def __init__(self, app: QApplication) -> None:
         super().__init__()
+        
+        self.app: QApplication = app
+        
         self._log("Creating robot started")
         self.robot: Robot = Robot()
 
@@ -36,15 +34,15 @@ class MainWindow(QMainWindow):
         Create a basic window, set the dimensions
         """
         self._log("Setting up the application")
-        # import win32api
-        screen_width: int = 1920  # win32api.GetSystemMetrics(0)
-        screen_height: int = 1080  # win32api.GetSystemMetrics(1)
+        screen_geometry = self.app.primaryScreen().geometry()
+        screen_width: int = screen_geometry.width()
+        screen_height: int = screen_geometry.height()
 
         self.setWindowTitle("RobotController")
-        self.setGeometry((screen_width-Constants.APP_WIDTH)//2,
-                         (screen_height-Constants.APP_HEIGHT)//2,
-                         Constants.APP_WIDTH,
-                         Constants.APP_HEIGHT)
+        self.setGeometry((screen_width-constants.App.APP_WIDTH)//2,
+                         (screen_height-constants.App.APP_HEIGHT)//2,
+                         constants.App.APP_WIDTH,
+                         constants.App.APP_HEIGHT)
 
     def _create_widgets(self) -> None:
         """
