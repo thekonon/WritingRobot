@@ -1,20 +1,21 @@
 import math
 import yaml
 import os
+import gui.constants as constants
 from typing import List, Tuple
 
 
 class Robot:
+    """
+        Class for computing the movements
+    """
     def __init__(self, *args, **kwargs) -> None:
         # Init variables
-        self._lengths: tuple = (0.0, 0.0, 0.0, 0.0, 0.0)
+        self._lengths: tuple = constants.Robot.LENGTHS
         self._phi: List[float] = [0.0, 0.0, 0.0, 0.0]
 
         # End_points of arms
-        self._r_m: List[float] = [25, 150]
-
-        self._settings_file_path = self._get_settings_path()
-        self._load_settings()
+        self._r_m: List[float] = constants.Robot.INIT_END_POINT
 
         # Overwrite the settings file if needed
         if "lengths" in kwargs:
@@ -62,30 +63,6 @@ class Robot:
         alfa_1: float = math.acos(AB_2/(2*self.l3*math.sqrt(AB_2)))
         self.phi_3 = alfa_0+alfa_1
         self.phi_4 = math.pi+alfa_0-alfa_1
-        
-        
-        
-    def _load_settings(self) -> None:
-        settings = None
-        with open(self._settings_file_path, "r") as stream:
-            try:
-                settings = yaml.safe_load(stream)
-            except yaml.YAMLError as exc:
-                print(exc)
-        if settings:
-            # Load lengths
-            lengths_dict = settings["lengths"]
-            order: list[str] = ["l1", "l2", "l3", "l4", "l5"]
-            self.lengths = tuple([lengths_dict[key] for key in order])
-
-            # Load initial position
-            initial_position_dict = settings["initial_position"]
-            self.r_m = [initial_position_dict["x_m"],
-                        initial_position_dict["y_m"]]
-
-            # print(f"Settings loaded successfully")
-            # print(f"Lengths: {self.lengths}")
-            # print(f"initial position: {self.r_m}")
 
     def _calculate_angles(self):
         # Calculate angle phi_0 - see docu
@@ -117,10 +94,6 @@ class Robot:
         self.phi = [phi_1, phi_2, phi_3, phi_4]
         # [val/3.14*180 for val in self.phi]
 
-    def _get_settings_path(self):
-        current_dir = os.path.dirname(__file__)
-        settings_path = os.path.join(current_dir, 'settings.yaml')
-        return settings_path
 
     @property
     def r_m(self) -> List[float]:
