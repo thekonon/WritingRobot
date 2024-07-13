@@ -3,21 +3,58 @@ import yaml
 import os
 import gui.constants as constants
 from typing import List, Tuple
+from abc import ABC, abstractmethod
 
-
-class Robot:
+class RobotInterface(ABC):
+    @abstractmethod
+    def get_motor_angles(self) -> List[float]:
+        pass
+    
+    @abstractmethod
+    def set_phi_1(self) -> None:
+        pass
+    
+    @abstractmethod
+    def set_phi_2(self) -> None:
+        pass
+    
+class Robot(RobotInterface):
     """
-        Class for computing the movements
+        # Class for computing the movements
+        
+        ## Initialization - parameters:
+        
+        ### lengths:
+        e.g. lengths = (100, 100, 100, 100, 50) \n
+        Set the lengths of arms of the Robot
+        
+        ### initial_position: 
+        e.g. initial_position = [50, 150] \n
+        Set the initial end point of arms
+        
+        ## Avaiable methods:
+        
+        get_motor_angles() -> List[float] \n
+        return a list of all angles of Robot
+        
+        ## Avaible operations:
+        
+        ### Robot +- tuple
+        
+        Change end point by substracting a list
     """
+    
     def __init__(self, *args, **kwargs) -> None:
+        print("Robot initialization started")
+        
         # Init variables
         self._lengths: tuple = constants.Robot.LENGTHS
-        self._phi: List[float] = [0.0, 0.0, 0.0, 0.0]
 
         # End_points of arms
         self._r_m: List[float] = constants.Robot.INIT_END_POINT
 
         # Overwrite the settings file if needed
+        # expected in kwargs - saved as in self.(value)
         possible_overwrites = \
             {
                 "lengths":              "lengths",
@@ -25,25 +62,39 @@ class Robot:
             }
         for value, key in possible_overwrites.items():
             if value in kwargs:
+                print(f"Overwriting variable {key} with value {kwargs[value]}")
                 setattr(self, key, kwargs[value])
-
+                
+        print("-"*60)
+        print("Robot initialized with following parameters: ")
+        print(f"Lengths: {self._lengths}")
+        print(f"Init point: {self._r_m}")
+        print("-"*60)
+        
+        print("Calculating initial angles")
+        self._phi: List[float] = [0.0, 0.0, 0.0, 0.0]
         self._calculate_angles()
+        print("Successfully done")
+        print("-"*60)
 
-    def get_motor_angles(self, r_m: List[float]) -> Tuple[float, float]:
+    def get_motor_angles(self, r_m: List[float]|None = None, output_in_degrees = False) -> Tuple[float, float]:
         """
         Calculate motor angles based on the given end point position
 
         Args:
-            r_m (List[float]): End point of the robot
+            r_m (List[float])| None: End point of the robot
 
         Returns:
-            Tuple[float, float]: Motor angles in radians
+            Tuple[float, float]: Motor angles in radians (possibility in degree)
         """
-        # Set the current end point
-        self.r_m = r_m
+        if r_m:
+            # Set the current end point
+            self.r_m = r_m
 
-        # Recalculate the robot position
-        self._calculate_angles()
+            # Recalculate the robot position
+            self._calculate_angles()
+        if output_in_degrees:
+            return (self._phi[0]/math.pi*180, self._phi[1]/math.pi*180)    
         return (self._phi[0], self._phi[1])
 
     def set_phi_1(self, phi_1: float) -> None:
@@ -75,7 +126,7 @@ class Robot:
         # Total length of end point from origin
         r_m_abs_2 = self.r_m[0] ** 2 + self.r_m[1] ** 2
         r_m_abs = math.sqrt(r_m_abs_2)
-        phi_p12 = math.acos((r_m_abs_2) / (2 * self.l1 * r_m_abs))
+        phi_p12 = math.acos((-self.l3**2+self.l1**2+r_m_abs_2) / (2 * self.l1 * r_m_abs))
         phi_p11 = math.atan2(self.r_m[1], self.r_m[0])
         phi_1 = phi_p11 + phi_p12
         phi_3 = math.atan2(
@@ -86,7 +137,7 @@ class Robot:
         r_m_2 = (self.r_m[0] - self.l5, self.r_m[1])
         r_m_2_abs_2 = r_m_2[0] ** 2 + r_m_2[1] ** 2
         r_m_2_abs = math.sqrt(r_m_2_abs_2)
-        phi_p21 = math.acos((r_m_2_abs_2) / (2 * self.l2 * r_m_2_abs))
+        phi_p21 = math.acos((-self.l4**2+self.l2**2+r_m_2_abs_2) / (2 * self.l2 * r_m_2_abs))
         phi_p22 = math.atan2(r_m_2[1], r_m_2[0])
         phi_2 = phi_p22 - phi_p21
 
@@ -98,6 +149,12 @@ class Robot:
         self.phi = [phi_1, phi_2, phi_3, phi_4]
         # [val/3.14*180 for val in self.phi]
 
+    def print_current_state(self) -> None:
+        print("-"*60)
+        print("Printing current state: ")
+        print(f"Lengths: {self._lengths}")
+        for idx, phi in enumerate(self._phi):
+            print(f"Phi{idx+1}: {phi:.3f} rad | {phi/3.14*180:.3f} deg")
 
     @property
     def r_m(self) -> List[float]:
@@ -189,7 +246,7 @@ class Robot:
 
     @property
     def l2(self) -> float:
-        return self._lengths[2]
+        return self._lengths[1]
 
     @l2.setter
     def l2(self, value: float):
@@ -197,7 +254,7 @@ class Robot:
 
     @property
     def l3(self) -> float:
-        return self._lengths[3]
+        return self._lengths[2]
 
     @l3.setter
     def l3(self, value: float):
