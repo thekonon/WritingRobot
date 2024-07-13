@@ -18,10 +18,14 @@ class Robot:
         self._r_m: List[float] = constants.Robot.INIT_END_POINT
 
         # Overwrite the settings file if needed
-        if "lengths" in kwargs:
-            self.lengths = kwargs["lengths"]
-        if "initial_position" in kwargs:
-            self.r_m = kwargs["initial_position"]
+        possible_overwrites = \
+            {
+                "lengths":              "lengths",
+                "initial_position":     "r_m"
+            }
+        for value, key in possible_overwrites.items():
+            if value in kwargs:
+                setattr(self, key, kwargs[value])
 
         self._calculate_angles()
 

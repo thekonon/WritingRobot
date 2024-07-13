@@ -15,7 +15,6 @@ from typing import List, Callable
 class MainWindow(QMainWindow):
     def __init__(self, app: QApplication) -> None:
         super().__init__()
-        
         self.app: QApplication = app
         
         self._log("Creating robot started")
@@ -32,6 +31,10 @@ class MainWindow(QMainWindow):
     def _set_up_app(self) -> None:
         """
         Create a basic window, set the dimensions
+        
+        Set ups:
+            - Title
+            - Geometry
         """
         self._log("Setting up the application")
         screen_geometry = self.app.primaryScreen().geometry()
@@ -64,12 +67,18 @@ class MainWindow(QMainWindow):
         self.motor_dial_layout = QHBoxLayout()
 
         # Adding Motor dial 1
-        self.motor_dial_1: MotorDial = self._create_motor_dial(
-            10, self.set_motor1_speed)
+        self.motor_dial_1: MotorDial = \
+            self._create_motor_dial(
+                10, 
+                self.set_motor1_speed
+                )
 
         # Adding Motor dial 2
-        self.motor_dial_2: MotorDial = self._create_motor_dial(
-            10, self.set_motor2_speed)
+        self.motor_dial_2: MotorDial = \
+            self._create_motor_dial(
+                10, 
+                self.set_motor2_speed
+                )
 
         # Adding Connect / disconned buttons
         self.button_layout = QVBoxLayout()

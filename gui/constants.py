@@ -7,13 +7,17 @@ class App:
 class Robot:
     LENGTHS: tuple = \
         (
-        0.0, #l1
-        0.0, #l2
-        0.0, #l3
-        0.0, #l4
-        0.0  #l5
+            100.0, #l1
+            100.0, #l2
+            100.0, #l3
+            100.0, #l4
+            50.0  #l5
         )
-    INIT_END_POINT: List[float] = [25, 150]
+    INIT_END_POINT: List[float] = \
+        [
+            25,
+            150
+        ]
 
 class Test:
     test: int = 100

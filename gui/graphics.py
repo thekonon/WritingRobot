@@ -56,7 +56,7 @@ class GridGraphicsView(QGraphicsView):
 
 
 class MyGraphicsScene(QGraphicsScene):
-    def __init__(self, robot: Robot = Robot()) -> None:
+    def __init__(self, robot: Robot) -> None:
         super().__init__()
         self.robot: Robot = robot
         self.on_left_hold: bool = False
@@ -65,9 +65,6 @@ class MyGraphicsScene(QGraphicsScene):
 
     def set_updater(self, updater: Callable) -> None:
         self.updater: Callable = updater
-        
-    def set_robot(self, robot: Robot) -> None:
-        self.robot = robot
 
     def mousePressEvent(self, event) -> None:
         if event.button() == Qt.LeftButton:
