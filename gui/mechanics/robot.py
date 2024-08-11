@@ -32,7 +32,14 @@ class Robot(RobotInterface):
         return (self.phi_1, self.phi_3)
 
     def set_phi_1(self, phi_1: float) -> None:
-        pass
+        self.r_m = list(self.find_circle_intersections( self.l1*math.cos(phi_1),
+                                                        self.l1*math.sin(phi_1),
+                                                        self.l2,
+                                                        self.l3*math.cos(self.phi_3) + self.l5,
+                                                        self.l3*math.sin(self.phi_3),
+                                                        self.l4))
+        print(f"Phi wanted: {phi_1} vs what you got {self.phi_1}")
+        
 
     def set_phi_2(self, phi_2: float) -> None:
         pass
@@ -43,7 +50,7 @@ class Robot(RobotInterface):
         """
         self.logger.info("Recalculating the angles")
         if not self.check_if_point_is_in_both_circles(self.r_m, self.l1+self.l2, self.l3+self.l4, self.l5):
-            raise ValueError("Robot has not reach to that point")
+            raise ValueError("Robot has no reach to that point")
 
         # ____________________________________________ #
         # Left part of robot

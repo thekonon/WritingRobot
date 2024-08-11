@@ -1,6 +1,7 @@
 import os
 import sys
 import pytest
+import math
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 root_dir = os.path.abspath(os.path.join(current_dir, '..'))
@@ -46,6 +47,31 @@ def test_get_motor_angles():
     robot = Robot(lengths=(100, 100, 100, 100, 50),
                   initial_position = [100, 100])
     assert robot.get_motor_angles([100, 100]) == (1.5707963267948966, 0.12955216714882256)
-    
+
+def test_computation_speed():
+    import time
+    x0 = 25
+    y0 = 100
+    robot = Robot(lengths=(80, 90, 100, 110, 50),
+                  initial_position = [x0, y0])
+    n = 100
+    start = time.time()
+    for i in range(n):
+        robot.r_m = [x0, y0]
+        y0 += -0.01
+    end = time.time()
+    assert (end-start) < 1, f"Computation took too long: {end - start} seconds"
+            
+def test_set_phi_1():
+    robot = Robot(lengths=(80, 90, 100, 110, 50),
+                initial_position = [25, 150]) 
+    robot.set_phi_1(math.pi/2)
+    assert robot.phi == [
+                            1.5707963267948968,
+                            1.1506959988659133,
+                            0.9284321988654943,
+                            2.2989271564833054,
+                        ]
+
 if __name__ == "__main__":
     print("Running")

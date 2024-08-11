@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod, abstractproperty
+from multiprocessing.sharedctypes import Value
 from typing import List
 import math
 
@@ -32,6 +33,31 @@ class RobotCalculationMixin:
         if distance_to_first_point <= r1 and distance_to_second_point <= r2:
             return True
         return False
+    
+    @staticmethod
+    def find_circle_intersections(x1, y1, r1, x2, y2, r2):
+        # Calculate the distance between the centers
+        d = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+        
+        # Check if there are no intersections
+        if d > r1 + r2 or d < abs(r1 - r2) or (d == 0 and r1 == r2):
+            raise ValueError("No intersection point found - no solution")  # No intersections or circles are coincident
+        
+        # Calculate the x coordinate of the intersection points
+        a = (r1**2 - r2**2 + d**2) / (2 * d)
+        h = math.sqrt(r1**2 - a**2)
+        
+        # Calculate the point P2 which is the point where the line through the circle intersection points crosses the line between the circle centers
+        x3 = x1 + a * (x2 - x1) / d
+        y3 = y1 + a * (y2 - y1) / d
+        
+        # Calculate the intersection points
+        intersection1 = (x3 + h * (y2 - y1) / d, y3 - h * (x2 - x1) / d)
+        intersection2 = (x3 - h * (y2 - y1) / d, y3 + h * (x2 - x1) / d)
+        
+        if intersection1[1] < intersection2[1]:
+            return intersection2
+        return intersection1
     
     
     
