@@ -1,3 +1,7 @@
-from src import Robot
+from src import RobotGUI
+from PySide6.QtWidgets import QApplication
 
-robot = Robot()
+app = QApplication([])
+robot_bui = RobotGUI()
+
+app.exec()

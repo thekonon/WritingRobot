@@ -3,6 +3,7 @@ import math
 from typing import Tuple, List
 
 from .mixins import RobotCalculationMixin
+from .circle import Circle
 from ..logger import *
 from ..constants import robotSettings
 
@@ -58,10 +59,47 @@ class Robot(RobotCalculationMixin):
             raise ValueError("Input must be 2 elements long")
         self.logger.info("Setting new end point")
         self._r_m = end_point
+        self._recalculate()
     
     def get_end_point(self) -> Tuple[float, float]:
         """Return a tuple of end - efector position"""
         return (self._r_m[0], self._r_m[1])
+    
+    def get_points(self) -> tuple:
+        point_0: tuple = (0, 0)
+        point_1: tuple = (self.settings.LENGTHS[0] * math.cos(self._internal_angles[0]),
+                          self.settings.LENGTHS[0] * math.sin(self._internal_angles[0]))
+        point_2: tuple = (point_1[0] + self.settings.LENGTHS[1] * math.cos(self._internal_angles[1]),
+                          point_1[1] + self.settings.LENGTHS[1] * math.sin(self._internal_angles[1]))
+        point_3: tuple = (self.settings.LENGTHS[4],
+                          0)
+        point_4: tuple = (point_3[0] + self.settings.LENGTHS[2]* math.cos(self._internal_angles[2]), 
+                          point_3[1] + self.settings.LENGTHS[2]* math.sin(self._internal_angles[2]))
+        point_5: tuple = (point_4[0] + self.settings.LENGTHS[3]* math.cos(self._internal_angles[3]), 
+                          point_4[1] + self.settings.LENGTHS[3]* math.sin(self._internal_angles[3]))
+        return (point_0, point_1, point_2, point_3, point_4, point_5)
+    
+    def get_limits(self) -> list:
+        points = []
+        for i in range(628):
+            angle: float = i/100    
+            mid_point_circle_1: tuple = (self.settings.LENGTHS[0] * math.cos(angle),
+                                        self.settings.LENGTHS[0] * math.sin(angle))
+            circle_1: Circle = Circle(mid_point_circle_1, self.settings.LENGTHS[1] +self.settings.LENGTHS[3])
+            mid_point_circle_2: tuple = (self.settings.LENGTHS[4],
+                                        0)
+            circle_2: Circle = Circle(mid_point_circle_2, self.settings.LENGTHS[2])
+            try:
+                intersections = circle_1.intersection(circle_2)
+                point_of_interest = intersections[1]
+                if intersections[0][1] > intersections[1][1]:
+                    point_of_interest = intersections[0]
+                
+                points.append(((mid_point_circle_1[0]+point_of_interest[0])/2, (mid_point_circle_1[1]+point_of_interest[1])/2))
+            except ValueError as ex:
+                pass
+
+        return points
     
     def _recalculate(self):
         """Based on wanted end - point recalculate motor angles"""
