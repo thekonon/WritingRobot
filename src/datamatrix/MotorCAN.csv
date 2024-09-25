@@ -1,0 +1,19 @@
+Message name,Signal Name,ID,Unit,Length [bits],Start Bit,Value Range,Initial Value,From,Description
+Config_steps,Microstepping_M1,100,/,3,0,8,8,MCU,Value of microstepping set up on A4988 for Motor 1
+Config_steps,Microstepping_M2,100,/,3,3,8,8,MCU,Value of microstepping set up on A4988 for Motor 2
+Config_cur_step,Motor_1_cur_step,101,/,14,0,16384,0,MCU,Current step for Motor 1
+Config_cur_step,Motor_2_cur_step,101,/,14,14,16384,0,MCU,Current step for Motor 2
+Config_lengths,Length_1,102,mm,12,0,4096,100,MCU,Lenght 1 in mm
+Config_lengths,Length_2,102,mm,12,12,4096,100,MCU,Lenght 2 in mm
+Config_lengths,Length_3,102,mm,12,24,4096,100,MCU,Lenght 3 in mm
+Config_lengths,Length_4,102,mm,12,36,4096,100,MCU,Lenght 4 in mm
+Config_lengths,Length_5,102,mm,12,48,4096,50,MCU,Lenght 5 in mm
+Config_firmware,Major,103,/,8,0,255,0,MCU,Major version of flashed firmware
+Config_firmware,Minor,103,/,8,8,255,0,MCU,Minor version of flashed firmware
+Req_mcu,Microsteps,50,/,1,0,2,0,*,Request MCU to broadcast Config_steps msg
+Req_mcu,Cur_steps,50,/,1,1,2,0,*,Request MCU to broadcast Config_cur_step msg
+Req_mcu,Lengths,50,/,1,2,2,0,*,Request MCU to broadcast Config_Lengths msg
+Req_mcu,Firmware,50,/,1,3,2,0,*,Request MCU to broadcast Config_firmware msg
+Set_motors,Motor_1,10,/,14,0,16384,0,Controller,Set step for motor 1
+Set_motors,Motor_2,10,/,14,14,16384,0,Controller,Set step for motor 2
+Set_stepps,Motor_1,15,/,65,0,16384,0,Controller,Set step for motor 1 without moving motors

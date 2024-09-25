@@ -77,6 +77,9 @@ class Robot(RobotCalculationMixin):
                           point_3[1] + self.settings.LENGTHS[2]* math.sin(self._internal_angles[2]))
         point_5: tuple = (point_4[0] + self.settings.LENGTHS[3]* math.cos(self._internal_angles[3]), 
                           point_4[1] + self.settings.LENGTHS[3]* math.sin(self._internal_angles[3]))
+        error: float = (point_2[0]-point_5[0])**2+(point_2[1]-point_5[1])**2
+        if error > 1e-8:
+            self.logger.warning(f"error is {error}") 
         return (point_0, point_1, point_2, point_3, point_4, point_5)
     
     def get_limits(self) -> list:

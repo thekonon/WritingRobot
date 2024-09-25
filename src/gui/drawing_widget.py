@@ -1,4 +1,6 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout
+from PySide6.QtGui import QPen, QColor
+from PySide6.QtCore import Qt
 import pyqtgraph as pg
 from PySide6.QtCore import QPoint
 import numpy as np
@@ -34,6 +36,10 @@ class DrawingWidget(QWidget):
         
         self.plot_widget.scene().sigMouseMoved.connect(self.on_mouse_dragged)
         self.plot_widget.scene().sigMouseClicked.connect(self.on_mouse_pressed)
+        
+        self.limits = None
+        
+        
     
     def set_robot(self, robot: Robot):
         self.robot: Robot = robot
@@ -41,6 +47,7 @@ class DrawingWidget(QWidget):
     
     def draw_robot(self):        
         self._clear_plot()
+        
         points: list = [QPoint(*point) for point in self.robot.get_points()]
         
         self.plot_line(points[0], points[1], {})
@@ -54,10 +61,14 @@ class DrawingWidget(QWidget):
         
     
     def _draw_limits(self):
-        points = [QPoint(*point) for point in self.robot.get_limits()]
+        if self.limits == None:
+            self.limits = [QPoint(*point) for point in self.robot.get_limits()]
         
-        for i in range(len(points) - 1):
-            self.plot_line(points[i], points[i + 1], {}, add_to_lines=False)
+        for i in range(len(self.limits) - 1):
+            self.plot_line(self.limits[i], self.limits[i + 1], {}, add_to_lines=False)
+            
+        self.plot_circle(QPoint(0,0), self.robot.settings.LENGTHS[0]+self.robot.settings.LENGTHS[1], {"dash": [5, 5]})
+        self.plot_circle(QPoint(self.robot.settings.LENGTHS[4],0), self.robot.settings.LENGTHS[2]+self.robot.settings.LENGTHS[3], {"dash": [30, 30]})
 
     def plot_line(self, start_point: QPoint, end_point: QPoint, line_settings: dict, add_to_lines = True):
         """Add a line to be drawn."""
@@ -76,29 +87,35 @@ class DrawingWidget(QWidget):
         if add_to_lines:
             self.lines.append(line)
 
-    def plot_circle(self, mid_point: QPoint, radius: int, line_settings: dict):
+    def plot_circle(self, mid_point: QPoint, radius: int, line_settings: dict, starting_angle: float = 0, ending_angle=2*np.pi, add_to_circles=True):
         """Add a circle to be drawn."""
         # Convert QPoint to tuple
         center = (mid_point.x(), mid_point.y())
         
-        # Create the circle plot
+        # Create the pen with pyqtgraph directly
         pen_color = line_settings.get('color', 'black')
         pen_width = line_settings.get('width', 2)
-        fill_color = line_settings.get('fill_color', (0, 0, 0, 0))
+        dash_pattern = line_settings.get('dash', None)
         
-        # Use PlotDataItem to create the circle
-        circle = pg.mkPen(color=pen_color, width=pen_width)
-        brush = pg.mkBrush(color=fill_color)
+        # Create the pyqtgraph pen directly with dash pattern
+        if dash_pattern:
+            pen = pg.mkPen(color=pen_color, width=pen_width, style=Qt.CustomDashLine)
+            pen.setDashPattern(dash_pattern)
+        else:
+            pen = pg.mkPen(color=pen_color, width=pen_width)
         
-        # PlotDataItem for circle (requires a parametric equation for circle)
-        t = np.linspace(0, 2 * np.pi, 100)
+        # Create the parametric equation for the circle
+        t = np.linspace(starting_angle, ending_angle, 100)
         x = center[0] + radius * np.cos(t)
         y = center[1] + radius * np.sin(t)
-        circle_item = pg.PlotDataItem(x, y, pen=circle, brush=brush)
+        
+        # Create the PlotCurveItem with the customized pen
+        circle_item = pg.PlotCurveItem(x, y, pen=pen)
         
         # Add to plot
         self.plot_widget.addItem(circle_item)
-        self.circles.append(circle_item)
+        if add_to_circles:
+            self.circles.append(circle_item)
     
     def _clear_plot(self):
         """Clears all the lines and circles from the plot."""
