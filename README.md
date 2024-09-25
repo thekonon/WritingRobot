@@ -7,7 +7,8 @@ Draw anything using robot!
 Robot is made of:
 - Control part that runs on __Raspberry PI4__
 - CAN communication using __MPC2515__ modules
-- __Arduino__ Nano clone
+- <del>__Arduino__ Nano clone</del>
+- STM32 Bluepill (STM32F103C6T6
 - Two __stepper motors drivers__
 
 # Schemes
@@ -16,7 +17,7 @@ Robot is made of:
 
 Arduino:
 
-![Arduino](docu/Img/Electrical/Arduino.png)
+![Arduino](docu/Img/Electrical/BluePill.png)
 
 Stepper motors
 
@@ -30,6 +31,14 @@ Connection to CAN MCP2515 module
 Powerline
 
 ![POWERLINE](docu/Img/Electrical/Power.png)
+
+MCP2551
+
+![MCP2551](docu/Img/Electrical/MCP2551.png)
+
+L7805
+
+![L7805](docu/Img/Electrical/L7805.png)
 
 ## Board design
 
