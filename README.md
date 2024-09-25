@@ -24,19 +24,15 @@ Stepper motors
 ![Stepper1](docu/Img/Electrical/Stepper_1.png)
 ![Stepper2](docu/Img/Electrical/Stepper_2.png)
 
-Connection to CAN MCP2515 module
-
-![MCP2515](docu/Img/Electrical/MCP2515.png)
-
 Powerline
 
 ![POWERLINE](docu/Img/Electrical/Power.png)
 
-MCP2551
+MCP2551 CANH/L -> Rx/Tx data module
 
 ![MCP2551](docu/Img/Electrical/MCP2551.png)
 
-L7805
+L7805 -> 12V -> 5V/1A 
 
 ![L7805](docu/Img/Electrical/L7805.png)
 
