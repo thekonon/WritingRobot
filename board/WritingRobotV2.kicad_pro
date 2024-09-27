@@ -37,9 +37,9 @@
         "other_text_thickness": 0.15,
         "other_text_upright": false,
         "pads": {
-          "drill": 0.8,
-          "height": 1.6,
-          "width": 1.6
+          "drill": 1.0,
+          "height": 1.7,
+          "width": 1.7
         },
         "silk_line_width": 0.1,
         "silk_text_italic": false,
@@ -58,7 +58,9 @@
           "width": 0.0
         }
       ],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        "silk_over_copper|59556712|167785747|f722eb7c-f631-49db-b8c2-5ef08dca0f61|00000000-0000-0000-0000-000000000000"
+      ],
       "meta": {
         "version": 2
       },
@@ -451,7 +453,9 @@
     }
   },
   "libraries": {
-    "pinned_footprint_libs": [],
+    "pinned_footprint_libs": [
+      "Logo"
+    ],
     "pinned_symbol_libs": [
       "STM32BLUPILL"
     ]
@@ -492,7 +496,7 @@
       "gencad": "",
       "idf": "",
       "netlist": "",
-      "plot": "",
+      "plot": "./fab",
       "pos_files": "",
       "specctra_dsn": "",
       "step": "",
