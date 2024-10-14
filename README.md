@@ -7,7 +7,8 @@ Draw anything using robot!
 Robot is made of:
 - Control part that runs on __Raspberry PI4__
 - CAN communication using __MPC2515__ modules
-- __Arduino__ Nano clone
+- <del>__Arduino__ Nano clone</del>
+- STM32 Bluepill (STM32F103C6T6
 - Two __stepper motors drivers__
 
 # Schemes
@@ -16,28 +17,32 @@ Robot is made of:
 
 Arduino:
 
-![Arduino](Docu/Img/Electrical/Arduino.png)
+![Arduino](docu/Img/Electrical/BluePill.png)
 
 Stepper motors
 
-![Stepper1](Docu/Img/Electrical/Stepper_1.png)
-![Stepper2](Docu/Img/Electrical/Stepper_2.png)
-
-Connection to CAN MCP2515 module
-
-![MCP2515](Docu/Img/Electrical/MCP2515.png)
+![Stepper1](docu/Img/Electrical/Stepper_1.png)
+![Stepper2](docu/Img/Electrical/Stepper_2.png)
 
 Powerline
 
-![POWERLINE](Docu/Img/Electrical/Power.png)
+![POWERLINE](docu/Img/Electrical/Power.png)
+
+MCP2551 CANH/L -> Rx/Tx data module
+
+![MCP2551](docu/Img/Electrical/MCP2551.png)
+
+L7805 -> 12V -> 5V/1A 
+
+![L7805](docu/Img/Electrical/L7805.png)
 
 ## Board design
 
 Wiring scheme of actual PCB
 
-![BoardScheme](Docu/Img/Board/Board_scheme.png)
+![BoardScheme](docu/Img/Board/Board_scheme.png)
 
 3D view to the board without and with modules
 
-![BoardWithoutComponents](Docu/Img/Board/Board_3d_without_components.png)
-![BoardWithComponents](Docu/Img/Board/Board_3d_with_components.png)
+![BoardWithoutComponents](docu/Img/Board/Board_3d_without_components.png)
+![BoardWithComponents](docu/Img/Board/Board_3d_with_components.png)
