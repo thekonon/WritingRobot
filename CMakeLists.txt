@@ -1,29 +1,27 @@
 cmake_minimum_required(VERSION 3.10)
-project(MotorControlTests)  # Project name
+project(TCurve)  # Project name
 
-# Specify the C++ standard
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_BINARY_DIR ${PROJECT_SOURCE_DIR}/platformIO/PsaciRobot/build)
+# Set the C++ standard
+set(CMAKE_CXX_STANDARD 11)  # or 17, depending on your needs
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-
-# Include directories
-include_directories(${PROJECT_SOURCE_DIR}/platformIO/PsaciRobot/lib/WritingRobotLib/src)
-include_directories(${PROJECT_SOURCE_DIR}/platformIO/PsaciRobot/test/test_steps_sender)
+# # Include Unity test
+include_directories(${PROJECT_SOURCE_DIR}/src/TCurve)
 include_directories(${PROJECT_SOURCE_DIR}/unity/src)
 
 # Source files
 set(SRC_FILES
-    platformIO/PsaciRobot/lib/WritingRobotLib/src/motor_control.cpp
-    platformIO/PsaciRobot/lib/WritingRobotLib/src/steps_sender.cpp
-    platformIO/PsaciRobot/test/test_steps_sender/MockArduino.cpp
+    src/TCurve/TCurve.cpp
 )
 
-set(TEST_STEPS_SENDER_FILES
-    platformIO/PsaciRobot/test/test_steps_sender/test_steps_sender.cpp
+set(TEST_SRC_FILES
+    test/test_TCurve.cpp
     unity/src/unity.c
 )
 
-# Add the executable
-add_executable(test_steps_sender ${SRC_FILES} ${TEST_STEPS_SENDER_FILES})
-set_property(TARGET test_steps_sender PROPERTY COMPILE_DEFINITIONS UNIT_TEST)
+# add_executable(build_tcurve_lib ${SRC_FILES})
+
+# # Add the executable
+add_executable(test_tcurve_lib ${SRC_FILES} ${TEST_SRC_FILES})
+set_property(TARGET test_tcurve_lib PROPERTY COMPILE_DEFINITIONS UNIT_TEST)
+# # 
