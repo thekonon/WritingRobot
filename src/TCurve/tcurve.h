@@ -25,13 +25,14 @@ extern "C" {
 
 // Enum for curve type selection
 enum class TCurveType {
-    TypeTCurve,
-    TypeSCurve
+    TCurve,
+    SCurve
 };
 
 // Enum for error handling in TCurve operations
 enum class TCurveError {
     OK,
+    NotOk,
     InvalidSetting,
     NotAValidCurveType,
     MustBeNonZeroFinite,
@@ -47,24 +48,26 @@ public:
     ~TCurve();
 
     // Methods for configuring the curve
-    TCurveError set_acceleration(double acceleration);
-    TCurveError set_max_velocity(double max_velocity);
-    TCurveError set_phi(double phi);
+    TCurveError set_acceleration(float acceleration);
+    TCurveError set_max_velocity(float max_velocity);
+    TCurveError set_phi(float delta_phi);
 
     // Method to get a point on the curve at a given time
-    TCurveError get_point(double t, double& x_out);
+    TCurveError get_point(float t, float& x_out);
 
-    TCurveType getType();
+    // Property getters
+    TCurveType get_curve_type();
     float get_acceleration();
     float get_max_velocity();
     float get_phi();
 
 private:
-    // Private members to store configuration parameters
-    TCurveType type_;
-    double acceleration_;
-    double max_velocity_;
-    double phi_;
+    TCurveError recalculate_internal_variables();
+
+    TCurveType type;        // TCurve or SCurve
+    float acceleration;    // A_MAX
+    float max_velocity;    // W_MAX
+    float delta_phi;       // ΔX
 };
 
 /* _____________________________________________________________________*/

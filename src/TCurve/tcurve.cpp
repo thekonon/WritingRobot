@@ -15,8 +15,8 @@
 // ----------------------------------------------------------------------
 
 // Constructor
-TCurve::TCurve(TCurveType type) : type_(type), acceleration_(0), max_velocity_(0), phi_(0){
-    // Implementation provided by user
+TCurve::TCurve(TCurveType type) : type(type), acceleration(0), max_velocity(0), delta_phi(0){
+    // Implementation provided by users
 }
 
 // Destructor
@@ -25,39 +25,41 @@ TCurve::~TCurve() {
 }
 
 // Method to set acceleration
-TCurveError TCurve::set_acceleration(double acceleration) {
-    // Implementation provided by user
-    return TCurveError::NotImplemented;
+TCurveError TCurve::set_acceleration(float acceleration) {
+    if (acceleration <= 0) return TCurveError::InvalidSetting;
+    this->acceleration = acceleration;
+    return TCurveError::OK;
 }
 
 // Method to set maximum velocity
-TCurveError TCurve::set_max_velocity(double max_velocity) {
-    // Implementation provided by user
-    return TCurveError::NotImplemented;
+TCurveError TCurve::set_max_velocity(float max_velocity) {
+    if (max_velocity <= 0) return TCurveError::InvalidSetting;
+    this->max_velocity = max_velocity;
+    return TCurveError::OK;
 }
 
-// Method to set phi
-TCurveError TCurve::set_phi(double phi) {
+// Method to set delta_phi
+TCurveError TCurve::set_phi(float delta_phi) {
     // Implementation provided by user
     return TCurveError::NotImplemented;
 }
 
 // Method to get a point on the curve
-TCurveError TCurve::get_point(double t, double& x_out) {
+TCurveError TCurve::get_point(float t, float& x_out) {
     // Implementation provided by user
     return TCurveError::NotImplemented;
 }
 float TCurve::get_acceleration() {
-    return acceleration_;
+    return acceleration;
 }
-TCurveType TCurve::getType() {
-    return type_;
+TCurveType TCurve::get_curve_type() {
+    return type;
 }
 
 float TCurve::get_max_velocity() {
-    return max_velocity_;
+    return max_velocity;
 }
 
 float TCurve::get_phi() {
-    return phi_;
+    return delta_phi;
 }
