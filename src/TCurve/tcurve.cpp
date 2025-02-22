@@ -80,10 +80,10 @@ TCurveError TCurve::setDeltaPhi(float delta_phi)
 }
 
 // Method to get a point on the curve
-TCurveError TCurve::getPoint(float t, float &x_out)
+TCurveError TCurve::getPoint(float t, float* x_out)
 {
     // Implementation provided by user
-    return TCurveError::NotImplemented;
+    return TCurveError::NotOk;
 }
 float TCurve::getAcceleration()
 {

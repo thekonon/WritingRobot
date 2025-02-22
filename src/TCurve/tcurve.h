@@ -54,7 +54,7 @@ public:
     TCurveError setDeltaPhi(float delta_phi);
 
     // Method to get a point on the curve at a given time
-    TCurveError getPoint(float t, float& x_out);
+    TCurveError getPoint(float t, float* x_out);
 
     // Property getters
     TCurveType getCurveType();

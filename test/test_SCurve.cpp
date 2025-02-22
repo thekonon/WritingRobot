@@ -155,7 +155,41 @@ void test_SCurve_setDeltaPhi(void)
     }
 }
 
-// void test_
+void test_SCurve_velocitity(void)
+{
+    /*Test, if velocity in SCurve is linear function*/
+    
+    // Test settings
+    float acceleration      = 1.5f;      /* Maximal acceleration */
+
+    float times[] = {0.0f, 5.0f};
+    float expected_velocities[] = {0.0f, 5.0f};
+    uint16_t time_division = sizeof(expected_velocities)/sizeof(expected_velocities[0]);       /* How many time points will be checked*/
+
+    float* current_value;
+
+    // Initialize Acceleration property
+    if (tcurve->setAcceleration(acceleration) != TCurveError::OK)
+    {
+        TEST_FAIL_MESSAGE("Initialization failed during setting acceleration");
+    };
+    for(int i = 0; i < time_division; i++)
+    {
+        switch(tcurve->getPoint(times[i], current_value)){
+        case TCurveError::OK:
+            TEST_ASSERT_FLOAT_WITHIN(0.001, 
+                expected_velocities[i], 
+                *current_value);
+            break;
+        case TCurveError::NotImplemented:
+            TEST_FAIL_MESSAGE("GetPointMethod is not implemented");
+            break;
+        default:
+            TEST_FAIL_MESSAGE("Uknown issue occured in time:");
+        }
+    }
+
+}
 
 int main(void)
 {
@@ -165,5 +199,6 @@ int main(void)
     RUN_TEST(test_TCurve_setAcceleration);
     RUN_TEST(test_TCurve_setMaxVelocity);
     RUN_TEST(test_SCurve_setDeltaPhi);
+    RUN_TEST(test_SCurve_velocitity);
     return UNITY_END();
 }
