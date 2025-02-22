@@ -27,7 +27,7 @@ TCurve::~TCurve()
 }
 
 // Method to set acceleration
-TCurveError TCurve::set_acceleration(float acceleration)
+TCurveError TCurve::setAcceleration(float acceleration)
 {
     if (acceleration <= 0)
         return TCurveError::InvalidSetting;
@@ -36,7 +36,7 @@ TCurveError TCurve::set_acceleration(float acceleration)
 }
 
 // Method to set maximum velocity
-TCurveError TCurve::set_max_velocity(float max_velocity)
+TCurveError TCurve::setMaxVelocity(float max_velocity)
 {
     if (max_velocity <= 0)
         return TCurveError::InvalidSetting;
@@ -45,13 +45,13 @@ TCurveError TCurve::set_max_velocity(float max_velocity)
 }
 
 // Method to set delta_phi
-TCurveError TCurve::set_delta_phi(float delta_phi)
+TCurveError TCurve::setDeltaPhi(float delta_phi)
 {
     if (delta_phi == 0)
         return TCurveError::MustBeNonZeroFinite;
-    if (get_acceleration() == 0)
+    if (getAcceleration() == 0)
         return TCurveError::InvalidSetting;
-    if (get_max_velocity() == 0 && get_curve_type() == TCurveType::TCurve)
+    if (getMaxVelocity() == 0 && getCurveType() == TCurveType::TCurve)
     {
         return TCurveError::InvalidSetting;
     }
@@ -66,7 +66,7 @@ TCurveError TCurve::set_delta_phi(float delta_phi)
         this->delta_phi = -delta_phi;
     }
 
-    TCurveError error = recalculate_internal_variables();
+    TCurveError error = recalculateInternalVariables();
 
     switch (error)
     {
@@ -80,39 +80,53 @@ TCurveError TCurve::set_delta_phi(float delta_phi)
 }
 
 // Method to get a point on the curve
-TCurveError TCurve::get_point(float t, float &x_out)
+TCurveError TCurve::getPoint(float t, float &x_out)
 {
     // Implementation provided by user
     return TCurveError::NotImplemented;
 }
-float TCurve::get_acceleration()
+float TCurve::getAcceleration()
 {
     return acceleration;
 }
-TCurveType TCurve::get_curve_type()
+TCurveType TCurve::getCurveType()
 {
     return type;
 }
 
-float TCurve::get_max_velocity()
+float TCurve::getMaxVelocity()
 {
     return max_velocity;
 }
 
-float TCurve::get_delta_phi()
+float TCurve::getDeltaPhi()
 {
-    return delta_phi*sign;
+    /* Returne delta_phi with its sign*/
+    return delta_phi * sign;
 }
 
-TCurveError TCurve::recalculate_internal_variables()
+float TCurve::getTMax()
+{
+    return t_max;
+}
+float TCurve::getTMid()
+{
+    return t_mid;
+}
+float TCurve::getWMax()
+{
+    return w_max;
+}
+
+TCurveError TCurve::recalculateInternalVariables()
 {
     // delta phi is unsigned - therefore have to be used
-    t_mid = sqrt(delta_phi / get_acceleration());
+    t_mid = sqrt(delta_phi / getAcceleration());
     if (isnan(t_mid))
     {
         return TCurveError::NotOk;
     }
     t_max = t_mid * 2;
-    w_max = t_mid * get_acceleration();
+    w_max = t_mid * getAcceleration();
     return TCurveError::OK;
 }

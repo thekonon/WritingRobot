@@ -49,26 +49,29 @@ public:
     ~TCurve();
 
     // Methods for configuring the curve
-    TCurveError set_acceleration(float acceleration);
-    TCurveError set_max_velocity(float max_velocity);
-    TCurveError set_delta_phi(float delta_phi);
+    TCurveError setAcceleration(float acceleration);
+    TCurveError setMaxVelocity(float max_velocity);
+    TCurveError setDeltaPhi(float delta_phi);
 
     // Method to get a point on the curve at a given time
-    TCurveError get_point(float t, float& x_out);
+    TCurveError getPoint(float t, float& x_out);
 
     // Property getters
-    TCurveType get_curve_type();
-    float get_acceleration();
-    float get_max_velocity();
-    float get_delta_phi();
+    TCurveType getCurveType();
+    float getAcceleration();
+    float getMaxVelocity();
+    float getDeltaPhi();
+    float getTMax();
+    float getTMid();
+    float getWMax();
 
 private:
-    TCurveError recalculate_internal_variables();
+    TCurveError recalculateInternalVariables();
 
     TCurveType type;        // TCurve or SCurve
     float acceleration;    // A_MAX
     float max_velocity;    // W_MAX
-    float delta_phi;       // DX
+    float delta_phi;       // DX - its unsigned version
     int8_t sign;            // 1 / -1
 
     float t_mid;
