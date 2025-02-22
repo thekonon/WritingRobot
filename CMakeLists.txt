@@ -15,7 +15,7 @@ set(SRC_FILES
 )
 
 set(TEST_SRC_FILES
-    test/test_TCurve.cpp
+    test/test_SCurve.cpp
     unity/src/unity.c
 )
 
