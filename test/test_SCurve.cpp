@@ -2,11 +2,13 @@
 #include "tcurve.h"
 
 /* ______________________________________________________ */
-/*  Test file specifically for TCurve module with TCurve
-setting, testing of SCurve has to be done elsewhere
+/*  Test file specifically for TCurve module with SCurve
+setting, testing of TCurve has to be done elsewhere
 
 Author:     Martin Prokop
 Date:       22.02.2025
+
+* Note, tests specific for SCurve starts with SCurve
 
 List of tests:
     - Initialization test       (test_TCurve_InitializedProperly)
@@ -152,6 +154,8 @@ void test_SCurve_setDeltaPhi(void)
         }
     }
 }
+
+// void test_
 
 int main(void)
 {
