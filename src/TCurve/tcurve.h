@@ -67,6 +67,7 @@ public:
 
 private:
     TCurveError recalculateInternalVariables();
+    TCurveError getPointSCurve(float, float*);
 
     TCurveType type;        // TCurve or SCurve
     float acceleration;    // A_MAX

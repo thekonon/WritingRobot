@@ -82,8 +82,32 @@ TCurveError TCurve::setDeltaPhi(float delta_phi)
 // Method to get a point on the curve
 TCurveError TCurve::getPoint(float t, float* x_out)
 {
+    // If SCurve is defined - use it
+    if(this->getCurveType() == TCurveType::SCurve)
+    {
+        return this->getPointSCurve(t, x_out);
+    }
+
+    // If TCurve is defined, check if it has max velocity
+    if(this->getMaxVelocity() == 0)
+    {
+        return TCurveError::InvalidSetting;
+    }
+
+    // If TCruve is set, check if maximal velocity is reached or not
+    if(this->w_max < this->getMaxVelocity())
+    {
+        // If maximal velocity is not reached
+        return this->getPointSCurve(t, x_out);
+    }
+
     // Implementation provided by user
-    return TCurveError::NotOk;
+    return TCurveError::NotImplemented;
+}
+TCurveError TCurve::getPointSCurve(float t, float* x_out)
+{
+
+    return TCurveError::NotImplemented;
 }
 float TCurve::getAcceleration()
 {
@@ -96,6 +120,7 @@ TCurveType TCurve::getCurveType()
 
 float TCurve::getMaxVelocity()
 {
+    /*Returns maximal velocity set by user*/
     return max_velocity;
 }
 
@@ -126,7 +151,8 @@ TCurveError TCurve::recalculateInternalVariables()
     {
         return TCurveError::NotOk;
     }
-    t_max = t_mid * 2;
-    w_max = t_mid * getAcceleration();
+    this->t_max = t_mid * 2;
+    this->w_max = t_mid * getAcceleration();
+    this->t_mid = t_mid;
     return TCurveError::OK;
 }
