@@ -1,0 +1,11 @@
+../Core/Src/main.cpp:68:6:void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef*)	2
+../Core/Src/main.cpp:78:6:void update_timer_period_us(uint32_t)	3
+../Core/Src/main.cpp:93:5:int main()	2
+../Core/Src/main.cpp:174:6:void SystemClock_Config()	3
+../Core/Src/main.cpp:213:13:void MX_NVIC_Init()	1
+../Core/Src/main.cpp:225:13:void MX_CAN_Init()	2
+../Core/Src/main.cpp:262:13:void MX_TIM1_Init()	4
+../Core/Src/main.cpp:308:13:void MX_TIM2_Init()	4
+../Core/Src/main.cpp:354:13:void MX_TIM3_Init()	4
+../Core/Src/main.cpp:399:13:void MX_GPIO_Init()	1
+../Core/Src/main.cpp:474:6:void Error_Handler()	1
