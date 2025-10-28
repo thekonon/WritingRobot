@@ -17,32 +17,32 @@ Robot is made of:
 
 Arduino:
 
-![Arduino](docu/Img/Electrical/BluePill.png)
+![Arduino](01_Doc/Img/Electrical/BluePill.png)
 
 Stepper motors
 
-![Stepper1](docu/Img/Electrical/Stepper_1.png)
-![Stepper2](docu/Img/Electrical/Stepper_2.png)
+![Stepper1](01_Doc/Img/Electrical/Stepper_1.png)
+![Stepper2](01_Doc/Img/Electrical/Stepper_2.png)
 
 Powerline
 
-![POWERLINE](docu/Img/Electrical/Power.png)
+![POWERLINE](01_Doc/Img/Electrical/Power.png)
 
 MCP2551 CANH/L -> Rx/Tx data module
 
-![MCP2551](docu/Img/Electrical/MCP2551.png)
+![MCP2551](01_Doc/Img/Electrical/MCP2551.png)
 
 L7805 -> 12V -> 5V/1A 
 
-![L7805](docu/Img/Electrical/L7805.png)
+![L7805](01_Doc/Img/Electrical/L7805.png)
 
 ## Board design
 
 Wiring scheme of actual PCB
 
-![BoardScheme](docu/Img/Board/Board_scheme.png)
+![BoardScheme](01_Doc/Img/Board/Board_scheme.png)
 
 3D view to the board without and with modules
 
-![BoardWithoutComponents](docu/Img/Board/Board_3d_without_components.png)
-![BoardWithComponents](docu/Img/Board/Board_3d_with_components.png)
+![BoardWithoutComponents](01_Doc/Img/Board/Board_3d_without_components.png)
+![BoardWithComponents](01_Doc/Img/Board/Board_3d_with_components.png)
