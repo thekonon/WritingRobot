@@ -6,7 +6,7 @@ class Circle:
         self.mid_point: tuple = midpoint
         self.radius: float = radius
         
-    def intersection(self, circle: 'Circle') -> Optional[Tuple[Tuple[float, float], Tuple[float, float]]]:
+    def intersection(self, circle: 'Circle') -> Tuple[Tuple[float, float], Tuple[float, float]]:
         # Coordinates and radii of the circles
         x1, y1 = self.mid_point
         r1 = self.radius
