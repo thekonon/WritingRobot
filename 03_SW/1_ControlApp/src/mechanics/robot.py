@@ -103,6 +103,8 @@ class Robot(RobotCalculationMixin):
             circle_2: Circle = Circle(mid_point_circle_2, self.settings.LENGTHS[2])
             try:
                 intersections = circle_1.intersection(circle_2)
+                if not intersections:
+                    raise ValueError("Intersection was not found")
                 point_of_interest = intersections[1]
                 if intersections[0][1] > intersections[1][1]:
                     point_of_interest = intersections[0]

@@ -1,6 +1,5 @@
 import logging
-from PySide6.QtWidgets import QWidget, QVBoxLayout
-from PySide6.QtGui import QPen, QColor
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QGraphicsScene
 from PySide6.QtCore import Qt
 import pyqtgraph as pg
 from PySide6.QtCore import QPoint
@@ -36,9 +35,9 @@ class DrawingWidget(QWidget):
         self.circles = []
 
         self.is_mouse_pressed = False
-
-        self.plot_widget.scene().sigMouseMoved.connect(self.on_mouse_dragged)
-        self.plot_widget.scene().sigMouseClicked.connect(self.on_mouse_pressed)
+        scene: QGraphicsScene = self.plot_widget.scene()
+        scene.sigMouseMoved.connect(self.on_mouse_dragged) # pyright: ignore[reportAttributeAccessIssue]
+        scene.sigMouseClicked.connect(self.on_mouse_pressed) # pyright: ignore[reportAttributeAccessIssue]
 
         self.limits = None
 
@@ -124,7 +123,7 @@ class DrawingWidget(QWidget):
 
         # Create the pyqtgraph pen directly with dash pattern
         if dash_pattern:
-            pen = pg.mkPen(color=pen_color, width=pen_width, style=Qt.CustomDashLine)
+            pen = pg.mkPen(color=pen_color, width=pen_width, style=Qt.PenStyle.CustomDashLine)
             pen.setDashPattern(dash_pattern)
         else:
             pen = pg.mkPen(color=pen_color, width=pen_width)
@@ -158,7 +157,16 @@ class DrawingWidget(QWidget):
         """Slot to handle mouse movement during dragging."""
         if self.is_mouse_pressed:
             # Map the scene position to the plot coordinates
-            mouse_point = self.plot_widget.plotItem.vb.mapSceneToView(pos)
+            if self.plot_widget.plotItem:
+                plotItem: pg.PlotItem = self.plot_widget.plotItem
+            else:
+                raise ValueError("Ther is no plotItem")
+            
+            if plotItem.vb:
+                vb: pg.ViewBox = plotItem.vb
+            else:
+                raise ValueError("Viewbox was not found!")
+            mouse_point = vb.mapSceneToView(pos)
             x = mouse_point.x()
             y = mouse_point.y()
             self.robot.set_end_point([x, y])
