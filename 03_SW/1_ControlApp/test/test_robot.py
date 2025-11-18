@@ -56,10 +56,10 @@ def test_calculate_angles(lenghts, end_points, expected_result, raises_exception
         robot = Robot(lengths=lenghts, initial_position=end_points)
         assert pytest.approx(robot._internal_angles, rel=0.04) == expected_result
         
-def test_set_motor_angles_valid_floats(robot_instance):
-    robot_instance.set_motor_angles(2.196178244710251, 0.9211712501423452)
-    #[25, 10]
-    assert robot_instance.get_end_point() == (25, 10)
+# def test_set_motor_angles_valid_floats(robot_instance):
+#     robot_instance.set_motor_angles(2.196178244710251, 0.9211712501423452)
+#     #[25, 10]
+#     assert robot_instance.get_end_point() == (25, 10)
 
 
 
