@@ -36,8 +36,12 @@ class DrawingWidget(QWidget):
 
         self.is_mouse_pressed = False
         scene: QGraphicsScene = self.plot_widget.scene()
-        scene.sigMouseMoved.connect(self.on_mouse_dragged) # pyright: ignore[reportAttributeAccessIssue]
-        scene.sigMouseClicked.connect(self.on_mouse_pressed) # pyright: ignore[reportAttributeAccessIssue]
+        scene.sigMouseMoved.connect(  # pyright: ignore[reportAttributeAccessIssue]
+            self.on_mouse_dragged
+        )
+        scene.sigMouseClicked.connect(  # pyright: ignore[reportAttributeAccessIssue]
+            self.on_mouse_pressed
+        )
 
         self.limits = None
 
@@ -123,7 +127,9 @@ class DrawingWidget(QWidget):
 
         # Create the pyqtgraph pen directly with dash pattern
         if dash_pattern:
-            pen = pg.mkPen(color=pen_color, width=pen_width, style=Qt.PenStyle.CustomDashLine)
+            pen = pg.mkPen(
+                color=pen_color, width=pen_width, style=Qt.PenStyle.CustomDashLine
+            )
             pen.setDashPattern(dash_pattern)
         else:
             pen = pg.mkPen(color=pen_color, width=pen_width)
@@ -161,7 +167,7 @@ class DrawingWidget(QWidget):
                 plotItem: pg.PlotItem = self.plot_widget.plotItem
             else:
                 raise ValueError("Ther is no plotItem")
-            
+
             if plotItem.vb:
                 vb: pg.ViewBox = plotItem.vb
             else:
