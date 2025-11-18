@@ -10,7 +10,7 @@ from ..logger import *
 
 class DrawingWidget(QWidget):
     def __init__(self, parent=None):
-        self.logger: logging.Logger = setup_loger()
+        self.logger: logging.Logger = get_logger()
         self.logger.info("Drawing object beeing created")
 
         super().__init__(parent)

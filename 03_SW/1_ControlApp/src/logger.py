@@ -1,12 +1,15 @@
 import logging
 
+_logger: logging.Logger|None = None
 
-def setup_loger() -> logging.Logger:
-    logger = logging.getLogger("RobotGUI")
-    logger.setLevel(logging.DEBUG)
-    logger.addHandler(get_logger_console_handler())
-    logger.addHandler(get_logger_file_handler())
-    return logger
+def get_logger() -> logging.Logger:
+    global _logger
+    if not _logger:
+        _logger = logging.getLogger("RobotGUI")
+        _logger.setLevel(logging.DEBUG)
+        _logger.addHandler(get_logger_console_handler())
+        _logger.addHandler(get_logger_file_handler())
+    return _logger
 
 
 def get_logger_console_handler() -> logging.StreamHandler:

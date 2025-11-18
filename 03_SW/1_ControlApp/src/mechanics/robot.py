@@ -14,7 +14,7 @@ class Robot(RobotCalculationMixin):
         lengths: Tuple[float, float, float, float, float] | None = None,
         initial_position: Tuple[float, float] | None = None,
     ) -> None:
-        self.logger: logging.Logger = setup_loger()
+        self.logger: logging.Logger = get_logger()
         self._setup_settings()
         if lengths:
             self.settings.LENGTHS = lengths
