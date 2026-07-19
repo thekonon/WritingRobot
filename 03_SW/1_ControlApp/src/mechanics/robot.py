@@ -137,8 +137,7 @@ class Robot(RobotCalculationMixin):
         self.logger.debug(f"beta: {beta}")
         self.logger.debug(f"gamma: {gamma}")
 
-        temp_rm = self._r_m
-        temp_rm[0] -= self.settings.LENGTHS[4]
+        temp_rm = (self._r_m[0] - self.settings.LENGTHS[4], self._r_m[1])
         rm_abs = sum([i**2 for i in temp_rm]) ** 0.5
         alfa = self.law_of_cosine_angle(
             self.settings.LENGTHS[3], self.settings.LENGTHS[2], rm_abs

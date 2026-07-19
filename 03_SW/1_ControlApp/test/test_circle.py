@@ -14,6 +14,11 @@ def assert_tuple_almost_equal(t1, t2, places=7):
     """Helper function to compare tuples of floats with tolerance"""
     return all(isclose(a, b, abs_tol=10**-places) for a, b in zip(t1, t2))
 
+def test_circle_init():
+    c = Circle((1, 2), 5)
+    assert c.mid_point == (1, 2)
+    assert c.radius == 5
+
 def test_intersecting_circles():
     c1 = Circle((0, 0), 10)
     c2 = Circle((0, 10), 10)

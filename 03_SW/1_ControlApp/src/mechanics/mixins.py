@@ -22,6 +22,7 @@ class RobotCalculationMixin:
     
     @staticmethod
     def check_if_point_is_in_both_circles(point: tuple|list, r1: float, r2: float, l5: float) -> bool:
+        """Very specific function for need of checking if endpoint can be reached"""
         def _calculate_distance_between_points(point1: tuple|list, point2: tuple|list) -> float:
             dx = point1[0] - point2[0]
             dy = point1[1] - point2[1]

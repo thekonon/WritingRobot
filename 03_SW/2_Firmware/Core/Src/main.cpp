@@ -136,6 +136,8 @@ int main(void)
 	HAL_GPIO_WritePin(STEP_1_GPIO_Port, STEP_1_Pin, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(STEP_2_GPIO_Port, STEP_2_Pin, GPIO_PIN_RESET);
 
+	TCurve curve;
+
 	curve.setAcceleration(50.0f);
 	curve.setDeltaPhi(10.0f);
 	curve.setMaxVelocity(25.0f);
@@ -156,11 +158,6 @@ int main(void)
 		/* USER CODE BEGIN 3 */
 		HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
 		HAL_Delay(500);
-		HAL_GPIO_TogglePin(DIR_1_GPIO_Port, DIR_1_Pin);
-		HAL_GPIO_TogglePin(DIR_2_GPIO_Port, DIR_2_Pin);
-
-		update_timer_period_us(new_period);
-		new_period += 1;
 	}
 	/* USER CODE END 3 */
 }

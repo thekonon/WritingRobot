@@ -19,8 +19,8 @@ def robot_instance():
 
 def test_property_assigments_r_m():
     robot = Robot(lengths=(100, 100, 100, 100, 50))
-    robot.r_m = [100, 100]
-    assert robot.r_m == [100, 100]
+    robot.set_end_point([100, 100])
+    assert robot.get_end_point() == (100, 100)
     
 def test_property_assigments_lengths():
     robot = Robot(lengths=(80, 90, 100, 110, 50))
@@ -58,7 +58,6 @@ def test_calculate_angles(lenghts, end_points, expected_result, raises_exception
         
 # def test_set_motor_angles_valid_floats(robot_instance):
 #     robot_instance.set_motor_angles(2.196178244710251, 0.9211712501423452)
-#     #[25, 10]
 #     assert robot_instance.get_end_point() == (25, 10)
 
 

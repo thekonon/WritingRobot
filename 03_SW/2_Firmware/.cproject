@@ -216,7 +216,6 @@
 		<project id="WritingRobot.null.457253940" name="WritingRobot"/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
-	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
 		<scannerConfigBuildInfo instanceId="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.1473510328;com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.1473510328.;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.535305573;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.189375102">
@@ -233,4 +232,7 @@
 		</scannerConfigBuildInfo>
 	</storageModule>
 	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
+		<buildTargets/>
+	</storageModule>
 </cproject>

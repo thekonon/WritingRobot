@@ -32,9 +32,3 @@ class Circle:
         
         # Return a tuple with both intersection points
         return (intersection1, intersection2)
-    
-if __name__ == "__main__":
-    c1 = Circle((0, 0), 10)
-    c2 = Circle((0, 10), 10)
-    intersections = c1.intersection(c2)
-    print("Intersections:", intersections)
