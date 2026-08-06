@@ -1,11 +1,11 @@
-from typing import List
+from typing import List, Tuple
 
 class App:
     APP_WIDTH: int = 900
     APP_HEIGHT: int = 800
 
 class Robot:
-    LENGTHS: tuple = \
+    LENGTHS: Tuple[float, float, float, float, float] = \
         (
             80.0, #l1
             90.0, #l2

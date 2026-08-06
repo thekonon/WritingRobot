@@ -46,7 +46,7 @@ def test_calculate_angles(lenghts, end_points, expected_result):
 def test_get_motor_angles():
     robot = Robot(lengths=(100, 100, 100, 100, 50),
                   initial_position = [100, 100])
-    assert robot.get_motor_angles([100, 100]) == (1.5707963267948966, 0.12955216714882256)
+    assert robot.get_motor_angles([100, 100]) == [1.5707963267948966, 0.12955216714882256]
 
 def test_computation_speed():
     import time

@@ -1,4 +1,5 @@
 import logging
+from typing import TextIO
 
 _logger: logging.Logger|None = None
 
@@ -12,7 +13,7 @@ def get_logger() -> logging.Logger:
     return _logger
 
 
-def get_logger_console_handler() -> logging.StreamHandler:
+def get_logger_console_handler() -> logging.StreamHandler[TextIO]:
     c_handler = logging.StreamHandler()
     c_handler.setLevel(logging.INFO)
     c_format = logging.Formatter("%(asctime)s | %(levelname)s: %(name)s: %(message)s")

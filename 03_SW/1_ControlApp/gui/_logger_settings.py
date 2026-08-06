@@ -1,6 +1,7 @@
 import logging
+from typing import TextIO
 
-def get_logger_console_handler() -> logging.StreamHandler:
+def get_logger_console_handler() -> logging.StreamHandler[TextIO]:
     """
         Return s handler for console logging
     """

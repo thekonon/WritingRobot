@@ -1,17 +1,13 @@
 import math
-from multiprocessing.sharedctypes import Value
-import yaml
-import os
 import gui.constants as constants
 import logging
 from .robot_mixins import RobotInterface
 from .._logger_settings import get_logger_console_handler, get_logger_file_handler
-from typing import List, Tuple
-from abc import ABC, abstractmethod, abstractproperty
+from typing import List, Tuple, Any
 
 
 class Robot(RobotInterface):
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *_, **kwargs: Any) -> None:
         self._setup_loger()
         self.logger.info("Robot initialization started")
         
@@ -25,11 +21,11 @@ class Robot(RobotInterface):
         self._calculate_angles()
                 
 
-    def get_motor_angles(self, r_m: List[float]|None = None, output_in_degrees = False) -> Tuple[float, float]:
+    def get_motor_angles(self, r_m: List[float]|None = None) -> List[float]:
         """Return angles of motor 1 and motor 2"""
         if r_m:
             self.r_m = r_m
-        return (self.phi_1, self.phi_3)
+        return [self.phi_1, self.phi_3]
 
     def set_phi_1(self, phi_1: float) -> None:
         self.r_m = list(self.find_circle_intersections( self.l1*math.cos(phi_1),
@@ -66,7 +62,7 @@ class Robot(RobotInterface):
             self.logger.error("First arm got out of range")
             raise ValueError("First arm is out of reach")
         
-        phi_0       = self.law_of_cosine_angle(self.l1, self.l2, r_m_abs)
+        # phi_0       = self.law_of_cosine_angle(self.l1, self.l2, r_m_abs)
         tilde_phi_1 = self.law_of_cosine_angle(self.l2, self.l1, r_m_abs)
         phi_RM      = self.atan2(self.r_m[1], self.r_m[0])
         phi_1       = tilde_phi_1 + phi_RM
@@ -78,7 +74,7 @@ class Robot(RobotInterface):
         # Right part of robot
         r_m_2       = (self.r_m[0]-self.l5)**2 + self.r_m[1]**2
         r_m_abs     = r_m_2**0.5
-        phi_0       = self.law_of_cosine_angle(self.l3, self.l4, r_m_abs)
+        # phi_0       = self.law_of_cosine_angle(self.l3, self.l4, r_m_abs)
         tilde_phi_3 = self.law_of_cosine_angle(self.l4, self.l3, r_m_abs)
         phi_RM      = self.atan2(self.r_m[1], (self.r_m[0]-self.l5))
         
@@ -97,7 +93,7 @@ class Robot(RobotInterface):
     def _load_parameters(self):
         # Load default parameters
         self.logger.info("Setting up default parameters")
-        self._lengths: tuple    = constants.Robot.LENGTHS
+        self._lengths: Tuple[float, float, float, float, float]    = constants.Robot.LENGTHS
         self._r_m: List[float]  = constants.Robot.INIT_END_POINT
         self._phi: List[float] = [0.0, 0.0, 0.0, 0.0]
         
@@ -107,7 +103,7 @@ class Robot(RobotInterface):
         self.logger.addHandler(get_logger_console_handler())
         self.logger.addHandler(get_logger_file_handler())
         
-    def _handle_arguments(self, kwargs):
+    def _handle_arguments(self, kwargs: Any):
         # Overwrite the settings file if needed
         self.logger.info("Input arguments found, overwriting robot settings")
         possible_overwrites = \
