@@ -1,0 +1,26 @@
+# # Create test executable
+# add_executable(TCurveAnalysis analysis.cpp)
+
+# # Include project and Unity headers
+# target_include_directories(TCurveAnalysis PRIVATE ../inc)
+
+# # Link with the TCurve library
+# target_link_libraries(TCurveAnalysis PRIVATE TCurve)
+
+# # Ensure TCurve is built before running tests
+# add_dependencies(TCurveAnalysis TCurve)
+
+find_package(pybind11 CONFIG REQUIRED)
+
+pybind11_add_module(tcurve
+    tcurve_python.cpp
+)
+
+target_link_libraries(tcurve
+    PRIVATE TCurve
+)
+
+target_include_directories(tcurve
+    PRIVATE
+        ${PROJECT_SOURCE_DIR}/inc
+)

@@ -1,0 +1,18 @@
+# Create test executable
+add_executable(TCurveTests test_TCurve.cpp)
+
+# Include project and Unity headers
+target_include_directories(TCurveTests PRIVATE ../inc ../Unity/src)
+
+# Add Unity source files
+set(UNITY_SRC ../Unity/src/unity.c)
+target_sources(TCurveTests PRIVATE ${UNITY_SRC})
+
+# Link with the TCurve library
+target_link_libraries(TCurveTests PRIVATE TCurve)
+
+# Ensure TCurve is built before running tests
+add_dependencies(TCurveTests TCurve)
+
+# Register the test
+add_test(NAME RunTCurveTest COMMAND TCurveTests)

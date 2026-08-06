@@ -1,0 +1,23 @@
+{
+    "version": 3,
+    "configurePresets": [
+        {
+            "name": "mingw-debug",
+            "displayName": "MinGW Debug",
+            "generator": "Visual Studio 16 2019",
+            "binaryDir": "${sourceDir}/build",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "pybind11_DIR": "C:/Users/theko/AppData/Local/Programs/Python/Python312/Lib/site-packages/pybind11/share/cmake/pybind11",
+                "Python_EXECUTABLE": "C:/Users/theko/AppData/Local/Programs/Python/Python312/python.exe",
+                "PYBIND11_FINDPYTHON": "ON"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "mingw-debug",
+            "configurePreset": "mingw-debug"
+        }
+    ]
+}
