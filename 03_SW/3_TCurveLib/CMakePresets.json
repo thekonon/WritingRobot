@@ -2,8 +2,8 @@
     "version": 3,
     "configurePresets": [
         {
-            "name": "mingw-debug",
-            "displayName": "MinGW Debug",
+            "name": "MSVS-debug",
+            "displayName": "MSVS Debug",
             "generator": "Visual Studio 16 2019",
             "binaryDir": "${sourceDir}/build",
             "cacheVariables": {
@@ -16,8 +16,8 @@
     ],
     "buildPresets": [
         {
-            "name": "mingw-debug",
-            "configurePreset": "mingw-debug"
+            "name": "MSVS-debug",
+            "configurePreset": "MSVS-debug"
         }
     ]
 }
